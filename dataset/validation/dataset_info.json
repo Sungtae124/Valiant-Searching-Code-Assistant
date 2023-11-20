@@ -1,0 +1,50 @@
+{
+  "builder_name": "source_code",
+  "citation": "https://github.com/shibing624/code-autocomplete",
+  "config_name": "python",
+  "dataset_name": "source_code",
+  "dataset_size": 213110355,
+  "description": "\u7eaf\u6587\u672c\u6570\u636e\uff0c\u5185\u5bb9\uff1a\u9ad8\u8d28\u91cf\u7f16\u7a0b\u6e90\u4ee3\u7801\uff0c\u5305\u62ecPython\uff0cJava\uff0cCPP\u6e90\u4ee3\u7801",
+  "download_checksums": {
+    "https://github.com/shibing624/code-autocomplete/releases/download/0.0.4/source_code.zip": {
+      "num_bytes": 110250994,
+      "checksum": null
+    }
+  },
+  "download_size": 110250994,
+  "features": {
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "https://github.com/bharathgs/Awesome-pytorch-list",
+  "license": "",
+  "size_in_bytes": 323361349,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 212304620,
+      "num_examples": 5215412,
+      "dataset_name": "source_code"
+    },
+    "validation": {
+      "name": "validation",
+      "num_bytes": 397138,
+      "num_examples": 10000,
+      "dataset_name": "source_code"
+    },
+    "test": {
+      "name": "test",
+      "num_bytes": 408597,
+      "num_examples": 10000,
+      "dataset_name": "source_code"
+    }
+  },
+  "version": {
+    "version_str": "1.0.0",
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  }
+}
