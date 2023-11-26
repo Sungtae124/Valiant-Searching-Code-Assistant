@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "VSCodeAssistant-AssistCodeLingo.helloWorld",
-        "title": "Hello World"
+        "title": "Assist! Code Lingo"
       }
     ]
   },
