@@ -44,7 +44,7 @@ if __name__ == '__main__':
     # source_code = input()
     source_code = '''
     import numpy as np
-    from sklearn import (datasets, tree, model_selection)
+    from sklearn import (datasets, model_selection)
     from xgboost import XGBClassifier
 
     if __name__ == '__main__':
