@@ -6,9 +6,7 @@
   "engines": {
     "vscode": "^1.84.0"
   },
-  "categories": [
-    "Other"
-  ],
+  "categories": ["Other"],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
@@ -17,7 +15,25 @@
         "command": "VSCodeAssistant-AssistCodeLingo.helloWorld",
         "title": "Assist! Code Lingo"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codelingoActivity",
+          "title": "Code Lingo's Activity",
+          "icon": "./Icons/IconWhite.png"
+        }
+      ]
+    },
+    "views": {
+      "codelingoActivity": [
+        {
+          "id": "testIconView",
+          "name": "Testing Icon",
+          "icon": "./Icons/IconWhite.png" 
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
