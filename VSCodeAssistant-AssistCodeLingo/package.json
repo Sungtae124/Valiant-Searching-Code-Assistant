@@ -12,8 +12,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "CodeLingo.mayI",
+        "command": "CodeLingo.start",
         "title": "Assist! Code Lingo"
+      },
+      {
+        "command": "CodeLingo.askAnalyzedCode",
+        "title": "Do you writing this code?"
       }
     ],
     "viewsContainers": {
@@ -29,7 +33,7 @@
       "codelingoActivity": [
         {
           "id": "testIconView",
-          "name": "Testing Icon",
+          "name": "Code Lingo와 함께 작업하세요!",
           "icon": "./Icons/IconWhite.png" 
         }
       ]
