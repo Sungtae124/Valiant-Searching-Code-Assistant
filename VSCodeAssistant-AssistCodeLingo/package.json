@@ -12,7 +12,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "VSCodeAssistant-AssistCodeLingo.helloWorld",
+        "command": "CodeLingo.mayI",
         "title": "Assist! Code Lingo"
       }
     ],
@@ -20,7 +20,7 @@
       "activitybar": [
         {
           "id": "codelingoActivity",
-          "title": "Code Lingo's Activity",
+          "title": "Assist! Code Lingo",
           "icon": "./Icons/IconWhite.png"
         }
       ]
