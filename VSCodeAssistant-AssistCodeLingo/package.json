@@ -1,6 +1,6 @@
 {
-  "name": "VSCodeAssistant-AssistCodeLingo",
-  "displayName": "Assist - Code Lingo",
+  "name": "vs-code-assistant-assist-code-lingo",
+  "displayName": "Assist! - Code Lingo",
   "description": "Valiant Searching Code Assistant - Assist! Code Lingo",
   "version": "0.0.1",
   "engines": {
