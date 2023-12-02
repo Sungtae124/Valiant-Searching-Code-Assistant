@@ -37,24 +37,25 @@ function activate(context) {
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
     let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
-        // Welcome View를 기본 사이드바에 표시.
+        // testIconView View를 기본 사이드바에 표시.
         vscode.commands.executeCommand('workbench.view.extension.codelingoActivity');
         // The code you place here will be executed every time your command is executed
         // Display a message box to the user
         vscode.window.showInformationMessage('May I assist you?');
     });
+    // Code Lingo를 호출하면 자동으로 코드를 분석하게 할 것인가? 그렇다면 May I assist you?가 나올때마다?
     let askAnalyzedCode = vscode.commands.registerCommand('CodeLingo.askAnalyzedCode', async () => {
         const answer = await vscode.window.showInformationMessage('Are you currently working on any of the following options?', { modal: false }, 'Yes', 'No');
         if (answer === 'Yes') {
             vscode.window.showInformationMessage('Great! Let me assist you.');
-            // 여기에 Yes를 선택했을 때의 동작을 추가합니다.
-            // Show the testIconView in the Sidebar
-            vscode.commands.executeCommand('workbench.view.extension.testIconView');
-            // Display a message in the testIconView
             vscode.window.showInformationMessage('I will recommend functions and algorithms suitable for this task.');
+            // 여기에 Yes를 선택했을 때의 동작을 추가합니다.
         }
         else if (answer === 'No') {
             await showOptionsQuickPick();
+        }
+        else {
+            vscode.window.showInformationMessage(`It's Okay. Let me assist you later!`);
         }
     });
     async function showOptionsQuickPick() {
@@ -64,11 +65,8 @@ function activate(context) {
         });
         if (selectedOption) {
             vscode.window.showInformationMessage(`You selected ${selectedOption}!`);
-            // 여기에 선택한 옵션에 대한 동작을 추가합니다.
-            // Show the testIconView in the Sidebar
-            vscode.commands.executeCommand('workbench.view.extension.testIconView');
-            // Display a message in the testIconView
             vscode.window.showInformationMessage('I will recommend functions and algorithms suitable for this task.');
+            // 여기에 선택한 옵션에 대한 동작을 추가합니다.
         }
         else {
             vscode.window.showInformationMessage('You did not select any option.');
