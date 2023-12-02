@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     let askAnalyzedCode = vscode.commands.registerCommand('CodeLingo.askAnalyzedCode', async () => {
         const answer = await vscode.window.showInformationMessage(
-            'Are you currently working on any of the following options?',
+            'Are you writing this type of code?',
             { modal: false },
             'Yes',
             'No'

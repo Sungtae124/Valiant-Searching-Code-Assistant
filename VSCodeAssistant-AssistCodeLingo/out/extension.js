@@ -45,7 +45,7 @@ function activate(context) {
     });
     // Code Lingo를 호출하면 자동으로 코드를 분석하게 할 것인가? 그렇다면 May I assist you?가 나올때마다?
     let askAnalyzedCode = vscode.commands.registerCommand('CodeLingo.askAnalyzedCode', async () => {
-        const answer = await vscode.window.showInformationMessage('Are you currently working on any of the following options?', { modal: false }, 'Yes', 'No');
+        const answer = await vscode.window.showInformationMessage('Are you writing this type of code?', { modal: false }, 'Yes', 'No');
         if (answer === 'Yes') {
             vscode.window.showInformationMessage('Great! Let me assist you.');
             vscode.window.showInformationMessage('I will recommend functions and algorithms suitable for this task.');
