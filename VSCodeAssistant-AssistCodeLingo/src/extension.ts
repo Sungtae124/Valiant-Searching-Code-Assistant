@@ -81,7 +81,12 @@ export function activate(context: vscode.ExtensionContext) {
             const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
             vscode.env.openExternal(vscode.Uri.parse(searchUrl));
         } else {
-            vscode.window.showInformationMessage('No search query entered.');
+            // 검색어가 입력되지 않았을 경우, 기본 검색어를 사용하여 구글 검색을 실행합니다.
+            const defaultSearchQuery = 'Analyzed your code'; // 여기에 원하는 기본 검색어를 입력하세요.
+            const defaultSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(defaultSearchQuery)}`;
+            vscode.env.openExternal(vscode.Uri.parse(defaultSearchUrl));
+            vscode.window.showInformationMessage('No query input.');
+            vscode.window.showInformationMessage('Based on the analyzed user code, I enter recommended search terms.');  
         }
     });
 

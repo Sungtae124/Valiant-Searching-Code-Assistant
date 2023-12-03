@@ -24,7 +24,7 @@
         "title": "Do you writing this code?"
       },
       {
-        "command": "CodeLingo.searching!",
+        "command": "CodeLingo.searching",
         "title":"What do you want to search?"
       },
       {
