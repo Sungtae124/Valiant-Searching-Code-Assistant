@@ -3,7 +3,7 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
     if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: function() { return m[k]; } };
+      desc = { enumerable: true, get: function() { return m[k]; } };
     }
     Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
@@ -44,6 +44,11 @@ function activate(context) {
         vscode.window.showInformationMessage('May I assist you?');
     });
     // Code Lingo를 호출하면 자동으로 코드를 분석하게 할 것인가? 그렇다면 May I assist you?가 나올때마다?
+    // 코드 분석을 위한 함수
+    let letsAnalyzeCode = vscode.commands.registerCommand('CodeLingo.letsAnalyzeCode', () => {
+        vscode.window.showInformationMessage("Let's analyze your code!");
+        //코드 분석 파이썬 파일 실행
+    });
     //코드 분석 후 사용자에게 확인.
     let askAnalyzedCode = vscode.commands.registerCommand('CodeLingo.askAnalyzedCode', async () => {
         const answer = await vscode.window.showInformationMessage('Are you writing this type of code?', { modal: false }, 'Yes', 'No');
