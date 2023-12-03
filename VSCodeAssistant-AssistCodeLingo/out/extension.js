@@ -44,6 +44,7 @@ function activate(context) {
         vscode.window.showInformationMessage('May I assist you?');
     });
     // Code Lingo를 호출하면 자동으로 코드를 분석하게 할 것인가? 그렇다면 May I assist you?가 나올때마다?
+    //코드 분석 후 사용자에게 확인.
     let askAnalyzedCode = vscode.commands.registerCommand('CodeLingo.askAnalyzedCode', async () => {
         const answer = await vscode.window.showInformationMessage('Are you writing this type of code?', { modal: false }, 'Yes', 'No');
         if (answer === 'Yes') {
@@ -58,6 +59,7 @@ function activate(context) {
             vscode.window.showInformationMessage(`It's Okay. Let me assist you later!`);
         }
     });
+    // 다중 선택지 구현을 위한 함수
     async function showOptionsQuickPick() {
         const options = ['Option 1', 'Option 2', 'Option 3', 'Request code analyze again!']; // 여러 선택지를 추가하세요
         const selectedOption = await vscode.window.showQuickPick(options, {
@@ -79,7 +81,24 @@ function activate(context) {
             // 선택을 취소했을 때의 동작을 추가합니다.
         }
     }
-    context.subscriptions.push(askStart, askAnalyzedCode);
+    //인터넷 검색을 위한 기능 구현.
+    let searchingInternet = vscode.commands.registerCommand('CodeLingo.searching!', async () => {
+        // 검색어를 입력받기 위한 Quick Input을 사용합니다.
+        const searchQuery = await vscode.window.showInputBox({
+            placeHolder: 'Enter your search query',
+            prompt: 'What do you want to search?',
+            ignoreFocusOut: true, // 입력 상자가 다른 곳에 포커스되어도 닫히지 않도록 합니다.
+        });
+        if (searchQuery) {
+            // 사용자가 검색어를 입력했을 경우, 구글 검색을 실행하고 결과를 브라우저에서 열어줍니다.
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+            vscode.env.openExternal(vscode.Uri.parse(searchUrl));
+        }
+        else {
+            vscode.window.showInformationMessage('No search query entered.');
+        }
+    });
+    context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet);
     // 사용자의 코드를 분석하는 파이썬 코드 불러오기.
     // 코드 분석중에는 "분석중입니다."라고 표시
     // 코드 분석 완료시 notification으로 "이런 코드를 작성하고 계신가요?" 물어보고 버튼 클릭으로 답변.
