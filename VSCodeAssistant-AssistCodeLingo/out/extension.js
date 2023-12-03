@@ -82,7 +82,7 @@ function activate(context) {
         }
     }
     //인터넷 검색을 위한 기능 구현.
-    let searchingInternet = vscode.commands.registerCommand('CodeLingo.searching!', async () => {
+    let searchingInternet = vscode.commands.registerCommand('CodeLingo.searching', async () => {
         // 검색어를 입력받기 위한 Quick Input을 사용합니다.
         const searchQuery = await vscode.window.showInputBox({
             placeHolder: 'Enter your search query',
