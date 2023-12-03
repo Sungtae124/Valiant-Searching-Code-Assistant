@@ -45,16 +45,20 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     async function showOptionsQuickPick() {
-        const options = ['Option 1', 'Option 2', 'Option 3']; // 여러 선택지를 추가하세요
+        const options = ['Option 1', 'Option 2', 'Option 3', 'Request code analyze again!']; // 여러 선택지를 추가하세요
         const selectedOption = await vscode.window.showQuickPick(options, {
             placeHolder: 'Select an option',
         });
 
         if (selectedOption) {
-            vscode.window.showInformationMessage(`You selected ${selectedOption}!`);
-            vscode.window.showInformationMessage('I will recommend functions and algorithms suitable for this task.');
-            // 여기에 선택한 옵션에 대한 동작을 추가합니다.
-
+            if (selectedOption === 'Request code analyze again!') {
+                vscode.window.showInformationMessage('Let me analyze your code again...');
+                // 여기에 코드를 다시 분석하는 동작을 추가합니다.
+            } else {
+                vscode.window.showInformationMessage(`You selected ${selectedOption}!`);
+                vscode.window.showInformationMessage('I will recommend functions and algorithms suitable for this task.');
+                // 선택한 옵션에 대한 동작을 추가합니다.
+            }
         } else {
             vscode.window.showInformationMessage('You did not select any option.');
             // 선택을 취소했을 때의 동작을 추가합니다.

@@ -13,12 +13,25 @@
     "commands": [
       {
         "command": "CodeLingo.start",
-        "title": "Assist! Code Lingo"
+        "title": "Code Lingo"
+      },
+      {
+        "command": "CodeLingo.letsAnalyzeCode",
+        "title": "Let's analyze your code!"
       },
       {
         "command": "CodeLingo.askAnalyzedCode",
         "title": "Do you writing this code?"
+      },
+      {
+        "command": "CodeLingo.searching!",
+        "title":"What do you want to search?"
+      },
+      {
+        "command": "CodeLingo.assist",
+        "title": "Assist! Code Lingo"
       }
+
     ],
     "viewsContainers": {
       "activitybar": [
