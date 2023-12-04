@@ -1,52 +1,72 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+// interaction.ts 파일에서 Interaction 및 InteractionModel 클래스 가져오기
+import { Interaction, InteractionModel } from './interaction'; 
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
+export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
+    // InteractionModel을 생성하는 코드 추가
+    const interactionModel = new InteractionModel();
+    vscode.window.createTreeView('interactions', { treeDataProvider: interactionModel });
+
 	let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
-        // testIconView View를 기본 사이드바에 표시.
         vscode.commands.executeCommand('workbench.view.extension.codelingoActivity');
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('May I assist you?');
+
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new Interaction("Code Lingo is started!", 'start');
+        interactionModel.addInteraction(interaction);
+
+        vscode.window.showInformationMessage('May I assist you?');
 	});
 
     // Code Lingo를 호출하면 자동으로 코드를 분석하게 할 것인가? 그렇다면 May I assist you?가 나올때마다?
 
     // 코드 분석을 위한 함수
     let letsAnalyzeCode = vscode.commands.registerCommand('CodeLingo.letsAnalyzeCode', () => {
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new Interaction("Start analyzing your code", 'analyze');
+        interactionModel.addInteraction(interaction);
+
         vscode.window.showInformationMessage("Let's analyze your code!");
         //코드 분석 파이썬 파일 실행
+        
     });
 
     //코드 분석 후 사용자에게 확인.
     let askAnalyzedCode = vscode.commands.registerCommand('CodeLingo.askAnalyzedCode', async () => {
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new Interaction("Asking anaylized code", 'askAnalyzedCode');
+        interactionModel.addInteraction(interaction);
+        
         const answer = await vscode.window.showInformationMessage(
             'Are you writing this type of code?',
             { modal: false },
             'Yes',
             'No'
         );
-
+        
         if (answer === 'Yes') {
+            // 사용자와의 상호작용을 InteractionModel에 추가
+            const interaction = new Interaction("You chose YES, Start recommend", 'startRecommend');
+            interactionModel.addInteraction(interaction);
+            
             vscode.window.showInformationMessage('Great! Let me assist you.');
             vscode.window.showInformationMessage('I will recommend functions and algorithms suitable for this task.');
             // 여기에 Yes를 선택했을 때의 동작을 추가합니다.
 
         } else if (answer === 'No') {
+            // 사용자와의 상호작용을 InteractionModel에 추가
+            const interaction = new Interaction("You chose No, let me show you options", 'answerNO, showOption');
+            interactionModel.addInteraction(interaction);
+
             await showOptionsQuickPick();
         }
         else {
+            // 사용자와의 상호작용을 InteractionModel에 추가
+            const interaction = new Interaction("Not answered.", 'notAnswered');
+            interactionModel.addInteraction(interaction);
+
             vscode.window.showInformationMessage(`It's Okay. Let me assist you later!`);
         }
     });
@@ -60,33 +80,60 @@ export function activate(context: vscode.ExtensionContext) {
 
         if (selectedOption) {
             if (selectedOption === 'Request code analyze again!') {
+                // 사용자와의 상호작용을 InteractionModel에 추가
+                const interaction = new Interaction("Now analyze your code again", 're-analyze');
+                interactionModel.addInteraction(interaction);
+
                 vscode.window.showInformationMessage('Let me analyze your code again...');
+
                 // 여기에 코드를 다시 분석하는 동작을 추가합니다.
             } else {
+                // 사용자와의 상호작용을 InteractionModel에 추가
+                const interaction = new Interaction(`${selectedOption} selected, Now recommend`, 'optionSelected + startRecommend');
+                interactionModel.addInteraction(interaction);
+
                 vscode.window.showInformationMessage(`You selected ${selectedOption}!`);
                 vscode.window.showInformationMessage('I will recommend functions and algorithms suitable for this task.');
+
                 // 선택한 옵션에 대한 동작을 추가합니다.
             }
         } else {
+            // 사용자와의 상호작용을 InteractionModel에 추가
+            const interaction = new Interaction("You did not select any option", 'notSelectOption');
+            interactionModel.addInteraction(interaction);
+
             vscode.window.showInformationMessage('You did not select any option.');
+
             // 선택을 취소했을 때의 동작을 추가합니다.
         }
     }
 
     //인터넷 검색을 위한 기능 구현.
     let searchingInternet = vscode.commands.registerCommand('CodeLingo.searching', async () => {
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new Interaction("Searching command input, now enter query", 'searchingStart');
+        interactionModel.addInteraction(interaction);
+        
         // 검색어를 입력받기 위한 Quick Input을 사용합니다.
         const searchQuery = await vscode.window.showInputBox({
             placeHolder: 'Enter your search query',
-            prompt: 'What do you want to search?',
+            prompt: 'What do you want to search?',          //여기를 멘트 + 기본 키워드로 띄워주기.
             ignoreFocusOut: true, // 입력 상자가 다른 곳에 포커스되어도 닫히지 않도록 합니다.
         });
     
         if (searchQuery) {
+            // 사용자와의 상호작용을 InteractionModel에 추가
+            const interaction = new Interaction("Searching entered query", 'search!');
+            interactionModel.addInteraction(interaction);
+
             // 사용자가 검색어를 입력했을 경우, 구글 검색을 실행하고 결과를 브라우저에서 열어줍니다.
             const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
             vscode.env.openExternal(vscode.Uri.parse(searchUrl));
         } else {
+            // 사용자와의 상호작용을 InteractionModel에 추가
+            const interaction = new Interaction("NO query entered", 'searchByKeyword');
+            interactionModel.addInteraction(interaction);
+            
             // 검색어가 입력되지 않았을 경우, 기본 검색어를 사용하여 구글 검색을 실행합니다.
             const defaultSearchQuery = 'Analyzed your code'; // 여기에 원하는 기본 검색어를 입력하세요.
             const defaultSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(defaultSearchQuery)}`;

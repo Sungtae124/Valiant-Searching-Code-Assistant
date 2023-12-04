@@ -52,6 +52,11 @@
     "views": {
       "codelingoActivity": [
         {
+          "id": "interactions",
+          "name": "Interactions",
+          "icon": "./Icons/IconWhite.png"
+        },
+        {
           "id": "testIconView",
           "name": "Code Lingo와 함께 작업하세요!",
           "icon": "./Icons/IconWhite.png" 
