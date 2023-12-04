@@ -28,7 +28,7 @@ exports.externalAnalysisIO = void 0;
 const cp = __importStar(require("child_process"));
 const path = __importStar(require("path"));
 const vscode = __importStar(require("vscode"));
-async function externalAnalysisIO() {
+async function externalAnalysisIO(inputValue) {
     return new Promise((resolve, reject) => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -40,6 +40,9 @@ async function externalAnalysisIO() {
         const scriptPath = path.join(path.dirname(currentFilePath), fileName);
         const pythonProcess = cp.spawn('python', [scriptPath]);
         let analysisResult = '';
+        // Write input value to the external process
+        pythonProcess.stdin.write(inputValue);
+        pythonProcess.stdin.end();
         pythonProcess.stdout.on('data', (data) => {
             analysisResult = data.toString();
         });
@@ -62,4 +65,13 @@ async function externalAnalysisIO() {
     });
 }
 exports.externalAnalysisIO = externalAnalysisIO;
+// Example of how to call the function with an input value
+const inputValue = 'your_input_value';
+externalAnalysisIO(inputValue)
+    .then((result) => {
+    vscode.window.showInformationMessage('Analysis Result:', result);
+})
+    .catch((error) => {
+    vscode.window.showInformationMessage('Error:', error);
+});
 //# sourceMappingURL=externalAnalysisIO.js.map

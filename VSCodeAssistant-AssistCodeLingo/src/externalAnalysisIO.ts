@@ -3,7 +3,7 @@ import * as cp from 'child_process';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-export async function externalAnalysisIO(): Promise<string> {
+export async function externalAnalysisIO(inputValue: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const editor = vscode.window.activeTextEditor;
 
@@ -19,6 +19,10 @@ export async function externalAnalysisIO(): Promise<string> {
         const pythonProcess = cp.spawn('python', [scriptPath]);
 
         let analysisResult = '';
+
+        // Write input value to the external process
+        pythonProcess.stdin.write(inputValue);
+        pythonProcess.stdin.end();
 
         pythonProcess.stdout.on('data', (data) => {
             analysisResult = data.toString();
@@ -42,3 +46,14 @@ export async function externalAnalysisIO(): Promise<string> {
         });
     });
 }
+
+// Example of how to call the function with an input value
+const inputValue = 'your_input_value';
+
+externalAnalysisIO(inputValue)
+    .then((result) => {
+        vscode.window.showInformationMessage('Analysis Result:', result);
+    })
+    .catch((error) => {
+        vscode.window.showInformationMessage('Error:', error);
+    });

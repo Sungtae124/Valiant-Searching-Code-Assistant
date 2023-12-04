@@ -62,7 +62,7 @@ function activate(context) {
         //코드 분석 파이썬 파일 실행
         try {
             // 코드 분석을 시작하고 결과를 받아옵니다.
-            const analysisResult = await (0, externalAnalysisIO_1.externalAnalysisIO)();
+            const analysisResult = await (0, externalAnalysisIO_1.externalAnalysisIO)("test input");
             // 코드 분석 결과를 사용자에게 표시합니다.
             vscode.window.showInformationMessage(`Code analysis result: ${analysisResult}`);
         }
