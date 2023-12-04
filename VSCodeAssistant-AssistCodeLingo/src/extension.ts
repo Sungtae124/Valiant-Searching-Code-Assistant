@@ -1,3 +1,5 @@
+//extension.ts
+
 import * as vscode from 'vscode';
 
 // interaction.ts 파일에서 Interaction 및 InteractionModel 클래스 가져오기
@@ -8,6 +10,11 @@ import { RecommendationProvider } from './recommendationProvider';
 import { getRecommendations } from './recommendationService';
 // 코드 분석 구현을 codeAnalyzer에서 가져오기
 import { externalAnalysisIO } from './externalAnalysisIO';
+// fileCopy 모듈 import
+import { readCurrentFileContent } from './fileCopy';
+
+// OutputChannel 선언
+let outputChannel: vscode.OutputChannel;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
@@ -19,6 +26,9 @@ export function activate(context: vscode.ExtensionContext) {
     const recommendationProvider = new RecommendationProvider();
     // testIconView를 생성하여 Primary Sidebar에 추가
     const testIconView = vscode.window.createTreeView('testIconView', { treeDataProvider: recommendationProvider });
+    // OutputChannel 초기화
+    outputChannel = vscode.window.createOutputChannel('CodeLingo Output');
+
 
     let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
         vscode.commands.executeCommand('workbench.view.extension.codelingoActivity');
@@ -30,11 +40,32 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('May I assist you?');
     });
 
-    // Code Lingo를 호출하면 자동으로 코드를 분석하게 할 것인가? 그렇다면 May I assist you?가 나올때마다?
-
     // 사용자의 코드를 분석하는 파이썬 코드 불러오기.
     // 코드 분석중에는 "분석중입니다."라고 표시
     // 코드 분석 완료시 notification으로 "이런 코드를 작성하고 계신가요?" 물어보고 버튼 클릭으로 답변.
+
+    
+    // 파일의 코드를 가져오는 함수
+    let getFileContent = vscode.commands.registerCommand('CodeLingo.getFileContent', () => {
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new Interaction("Getting file content", 'getFileContent');
+        interactionModel.addInteraction(interaction);
+
+        // fileCopy.ts 모듈을 사용하여 현재 열린 파일의 코드를 가져옴
+        const fileContent = readCurrentFileContent();
+
+        
+        if (fileContent !== null) {
+            // 파일 내용을 콘솔에 출력하거나 다른 원하는 동작 수행
+            console.log('현재 열린 파일의 내용:');
+            console.log(fileContent);
+
+            // 여기에서 fileContent를 활용하여 원하는 로직 수행
+            // 예: 코드 분석, 추천 등
+        } else {
+            vscode.window.showErrorMessage('파일 내용을 가져올 수 없습니다.');
+        }
+    });
 
     // 코드 분석을 위한 함수
     let letsAnalyzeCode = vscode.commands.registerCommand('CodeLingo.letsAnalyzeCode', async () => {
@@ -44,17 +75,45 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.window.showInformationMessage("Let's analyze your code!");
 
+        // 파일의 코드를 가져오는 함수 호출
+        const fileContent = readCurrentFileContent();
+
+        if (fileContent !== null) {
+            // 파일 내용을 콘솔에 출력하거나 다른 원하는 동작 수행
+            console.log('현재 열린 파일의 내용:');
+            console.log(fileContent);
+
+            // 여기에서 fileContent를 활용하여 원하는 로직 수행
+            // 예: 코드 분석, 추천 등
+        } else {
+            vscode.window.showErrorMessage('파일 내용을 가져올 수 없습니다.');
+        }
 
         //코드 분석 파이썬 파일 실행
-        try {
-            // 코드 분석을 시작하고 결과를 받아옵니다.
-            const analysisResult = await externalAnalysisIO("test input");
-    
-            // 코드 분석 결과를 사용자에게 표시합니다.
-            vscode.window.showInformationMessage(`Code analysis result: ${analysisResult}`);
-        } catch (error: any) {      // 여기서 any를 사용하여 타입을 명시합니다.
-            // 코드 분석 중 오류가 발생하면 오류 메시지를 표시합니다.
-            vscode.window.showErrorMessage(error.message);
+        if (fileContent !== null) {
+            try {
+                // 코드 분석을 시작하고 결과를 받아옵니다.
+                const analysisResult = await externalAnalysisIO(fileContent);
+
+                // OutputChannel에 결과를 표시합니다.
+                outputChannel.clear(); // 기존 내용을 지우고 새로운 결과를 출력
+                outputChannel.appendLine('Code analysis result:');
+
+                //outputChannel.append(analysisResult);
+                // 배열 전체를 문자열로 변환하지 않고 각 요소를 개별적으로 출력
+                analysisResult.forEach(line => {
+                    outputChannel.appendLine(line);
+                });
+                
+                outputChannel.show(true); // OutputChannel 표시
+
+            } catch (error: any) {
+                // 여기서 any를 사용하여 타입을 명시합니다.
+                // 코드 분석 중 오류가 발생하면 오류 메시지를 표시합니다.
+                vscode.window.showErrorMessage(error.message);
+            }
+        } else {
+            vscode.window.showErrorMessage('파일 내용을 가져올 수 없습니다.');
         }
     });
 
@@ -181,7 +240,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode);
+    context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode, getFileContent);
 }
 
 // This method is called when your extension is deactivated
