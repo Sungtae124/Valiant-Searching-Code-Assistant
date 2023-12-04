@@ -31,6 +31,8 @@ const interaction_1 = require("./interaction");
 const recommendationProvider_1 = require("./recommendationProvider");
 // 코드 추천 함수 부분 구현을 별도 클래스에서 가져오기.
 const recommendationService_1 = require("./recommendationService");
+// 코드 분석 구현을 codeAnalyzer에서 가져오기
+const externalAnalysisIO_1 = require("./externalAnalysisIO");
 function activate(context) {
     console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
     // InteractionModel을 생성하는 코드 추가
@@ -48,13 +50,26 @@ function activate(context) {
         vscode.window.showInformationMessage('May I assist you?');
     });
     // Code Lingo를 호출하면 자동으로 코드를 분석하게 할 것인가? 그렇다면 May I assist you?가 나올때마다?
+    // 사용자의 코드를 분석하는 파이썬 코드 불러오기.
+    // 코드 분석중에는 "분석중입니다."라고 표시
+    // 코드 분석 완료시 notification으로 "이런 코드를 작성하고 계신가요?" 물어보고 버튼 클릭으로 답변.
     // 코드 분석을 위한 함수
-    let letsAnalyzeCode = vscode.commands.registerCommand('CodeLingo.letsAnalyzeCode', () => {
+    let letsAnalyzeCode = vscode.commands.registerCommand('CodeLingo.letsAnalyzeCode', async () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction = new interaction_1.Interaction("Start analyzing your code", 'analyze');
         interactionModel.addInteraction(interaction);
         vscode.window.showInformationMessage("Let's analyze your code!");
         //코드 분석 파이썬 파일 실행
+        try {
+            // 코드 분석을 시작하고 결과를 받아옵니다.
+            const analysisResult = await (0, externalAnalysisIO_1.externalAnalysisIO)();
+            // 코드 분석 결과를 사용자에게 표시합니다.
+            vscode.window.showInformationMessage(`Code analysis result: ${analysisResult}`);
+        }
+        catch (error) { // 여기서 any를 사용하여 타입을 명시합니다.
+            // 코드 분석 중 오류가 발생하면 오류 메시지를 표시합니다.
+            vscode.window.showErrorMessage(error.message);
+        }
     });
     //코드 분석 후 사용자에게 확인.
     let askAnalyzedCode = vscode.commands.registerCommand('CodeLingo.askAnalyzedCode', async () => {
@@ -156,9 +171,6 @@ function activate(context) {
         }
     });
     context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode);
-    // 사용자의 코드를 분석하는 파이썬 코드 불러오기.
-    // 코드 분석중에는 "분석중입니다."라고 표시
-    // 코드 분석 완료시 notification으로 "이런 코드를 작성하고 계신가요?" 물어보고 버튼 클릭으로 답변.
 }
 exports.activate = activate;
 // This method is called when your extension is deactivated
