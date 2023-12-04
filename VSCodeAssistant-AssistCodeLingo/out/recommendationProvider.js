@@ -25,9 +25,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecommendationProvider = void 0;
 const vscode = __importStar(require("vscode"));
-const recommendationService_1 = require("./recommendationService");
 class RecommendationProvider {
-    recommendations = (0, recommendationService_1.getRecommendations)();
+    recommendations = [];
+    constructor(recommendations = []) {
+        this.recommendations = recommendations;
+    }
+    setRecommendations(recommendations) {
+        this.recommendations = recommendations;
+        this.refresh();
+    }
     getTreeItem(element) {
         return element;
     }

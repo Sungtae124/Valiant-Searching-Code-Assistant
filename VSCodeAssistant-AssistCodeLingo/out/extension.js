@@ -29,6 +29,8 @@ const vscode = __importStar(require("vscode"));
 const interaction_1 = require("./interaction");
 //코드 추천 부분을 recommendationProvider에서 가져오기.
 const recommendationProvider_1 = require("./recommendationProvider");
+// 코드 추천 함수 부분 구현을 별도 클래스에서 가져오기.
+const recommendationService_1 = require("./recommendationService");
 function activate(context) {
     console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
     // InteractionModel을 생성하는 코드 추가
@@ -112,6 +114,16 @@ function activate(context) {
             // 선택을 취소했을 때의 동작을 추가합니다.
         }
     }
+    // 코드 분석을 위한 함수
+    let recommendCode = vscode.commands.registerCommand('CodeLingo.recommend', () => {
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new interaction_1.Interaction("Recommend usual code", 'recommendation');
+        interactionModel.addInteraction(interaction);
+        vscode.window.showInformationMessage("Now I will serve you recommend CODE!");
+        // 상호작용 모델을 통해 추천 코드를 가져오는 로직 또는 동적으로 생성하는 로직을 추가
+        const recommendations = (0, recommendationService_1.getRecommendations)(); // 예시: recommendationService.ts에서 추천 코드를 가져오는 로직을 추가
+        recommendationProvider.setRecommendations(recommendations);
+    });
     //인터넷 검색을 위한 기능 구현.
     let searchingInternet = vscode.commands.registerCommand('CodeLingo.searching', async () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
@@ -143,7 +155,7 @@ function activate(context) {
             vscode.window.showInformationMessage('Based on the analyzed user code, I enter recommended search terms.');
         }
     });
-    context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet);
+    context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode);
     // 사용자의 코드를 분석하는 파이썬 코드 불러오기.
     // 코드 분석중에는 "분석중입니다."라고 표시
     // 코드 분석 완료시 notification으로 "이런 코드를 작성하고 계신가요?" 물어보고 버튼 클릭으로 답변.

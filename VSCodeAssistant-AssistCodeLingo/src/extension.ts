@@ -2,10 +2,8 @@ import * as vscode from 'vscode';
 
 // interaction.ts 파일에서 Interaction 및 InteractionModel 클래스 가져오기
 import { Interaction, InteractionModel } from './interaction'; 
-
 //코드 추천 부분을 recommendationProvider에서 가져오기.
 import { RecommendationProvider } from './recommendationProvider';
-
 // 코드 추천 함수 부분 구현을 별도 클래스에서 가져오기.
 import { getRecommendations } from './recommendationService';
 
@@ -15,10 +13,8 @@ export function activate(context: vscode.ExtensionContext) {
     // InteractionModel을 생성하는 코드 추가
     const interactionModel = new InteractionModel();
     vscode.window.createTreeView('interactions', { treeDataProvider: interactionModel });
-
     // RecommendationProvider 생성
     const recommendationProvider = new RecommendationProvider();
-
     // testIconView를 생성하여 Primary Sidebar에 추가
     const testIconView = vscode.window.createTreeView('testIconView', { treeDataProvider: recommendationProvider });
 
@@ -120,6 +116,19 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }
 
+    // 코드 분석을 위한 함수
+    let recommendCode = vscode.commands.registerCommand('CodeLingo.recommend', () => {
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new Interaction("Recommend usual code", 'recommendation');
+        interactionModel.addInteraction(interaction);
+
+        vscode.window.showInformationMessage("Now I will serve you recommend CODE!");
+
+        // 상호작용 모델을 통해 추천 코드를 가져오는 로직 또는 동적으로 생성하는 로직을 추가
+        const recommendations = getRecommendations(); // 예시: recommendationService.ts에서 추천 코드를 가져오는 로직을 추가
+        recommendationProvider.setRecommendations(recommendations);        
+    });
+
     //인터넷 검색을 위한 기능 구현.
     let searchingInternet = vscode.commands.registerCommand('CodeLingo.searching', async () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
@@ -155,7 +164,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-	context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet);
+	context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode);
 
     // 사용자의 코드를 분석하는 파이썬 코드 불러오기.
     // 코드 분석중에는 "분석중입니다."라고 표시

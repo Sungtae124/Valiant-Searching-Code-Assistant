@@ -2,8 +2,17 @@ import * as vscode from 'vscode';
 import { getRecommendations } from './recommendationService';
 
 export class RecommendationProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
-    private recommendations: string[] = getRecommendations();
+    private recommendations: string[] = [];
 
+    constructor(recommendations: string[] = []) {
+        this.recommendations = recommendations;
+    }
+
+    setRecommendations(recommendations: string[]): void {
+        this.recommendations = recommendations;
+        this.refresh();
+    }
+    
     getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
         return element;
     }
