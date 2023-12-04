@@ -65,13 +65,4 @@ async function externalAnalysisIO(inputValue) {
     });
 }
 exports.externalAnalysisIO = externalAnalysisIO;
-// Example of how to call the function with an input value
-const inputValue = 'your_input_value';
-externalAnalysisIO(inputValue)
-    .then((result) => {
-    vscode.window.showInformationMessage('Analysis Result:', result);
-})
-    .catch((error) => {
-    vscode.window.showInformationMessage('Error:', error);
-});
 //# sourceMappingURL=externalAnalysisIO.js.map
