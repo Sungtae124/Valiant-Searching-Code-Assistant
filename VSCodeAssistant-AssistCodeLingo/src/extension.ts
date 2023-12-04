@@ -3,12 +3,24 @@ import * as vscode from 'vscode';
 // interaction.ts 파일에서 Interaction 및 InteractionModel 클래스 가져오기
 import { Interaction, InteractionModel } from './interaction'; 
 
+//코드 추천 부분을 recommendationProvider에서 가져오기.
+import { RecommendationProvider } from './recommendationProvider';
+
+// 코드 추천 함수 부분 구현을 별도 클래스에서 가져오기.
+import { getRecommendations } from './recommendationService';
+
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
 
     // InteractionModel을 생성하는 코드 추가
     const interactionModel = new InteractionModel();
     vscode.window.createTreeView('interactions', { treeDataProvider: interactionModel });
+
+    // RecommendationProvider 생성
+    const recommendationProvider = new RecommendationProvider();
+
+    // testIconView를 생성하여 Primary Sidebar에 추가
+    const testIconView = vscode.window.createTreeView('testIconView', { treeDataProvider: recommendationProvider });
 
 	let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
         vscode.commands.executeCommand('workbench.view.extension.codelingoActivity');

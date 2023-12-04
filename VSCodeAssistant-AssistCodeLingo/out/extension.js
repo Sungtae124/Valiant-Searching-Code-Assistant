@@ -27,11 +27,17 @@ exports.deactivate = exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
 // interaction.ts 파일에서 Interaction 및 InteractionModel 클래스 가져오기
 const interaction_1 = require("./interaction");
+//코드 추천 부분을 recommendationProvider에서 가져오기.
+const recommendationProvider_1 = require("./recommendationProvider");
 function activate(context) {
     console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
     // InteractionModel을 생성하는 코드 추가
     const interactionModel = new interaction_1.InteractionModel();
     vscode.window.createTreeView('interactions', { treeDataProvider: interactionModel });
+    // RecommendationProvider 생성
+    const recommendationProvider = new recommendationProvider_1.RecommendationProvider();
+    // testIconView를 생성하여 Primary Sidebar에 추가
+    const testIconView = vscode.window.createTreeView('testIconView', { treeDataProvider: recommendationProvider });
     let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
         vscode.commands.executeCommand('workbench.view.extension.codelingoActivity');
         // 사용자와의 상호작용을 InteractionModel에 추가
