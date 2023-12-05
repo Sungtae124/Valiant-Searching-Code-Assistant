@@ -25,9 +25,9 @@ export class ButtonProvider implements vscode.TreeDataProvider<MyTreeItem> {
                     command: 'CodeLingo.assist',
                     title: 'Assist! Code Lingo'
                 }),
-                new MyTreeItem('request recommend', vscode.TreeItemCollapsibleState.None, {
+                new MyTreeItem('Request recommendation', vscode.TreeItemCollapsibleState.None, {
                     command: 'CodeLingo.recommend',
-                    title: 'Please recommend'
+                    title: 'Request recommendation'
                 }),
                 new MyTreeItem('Search on Google', vscode.TreeItemCollapsibleState.None, {
                     command: 'CodeLingo.searching',
