@@ -260,7 +260,7 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
         myButtonProvider.refresh();
     }));
-    // 예시: 클립보드에 복사하는 함수
+    // 클립보드에 복사하는 함수
     function copyToClipboard() {
         vscode.env.clipboard.writeText(currentAnalysisResult[chosenOption])
             .then(() => {
