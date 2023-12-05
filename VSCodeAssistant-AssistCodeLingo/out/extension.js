@@ -40,6 +40,9 @@ const fileCopy_1 = require("./fileCopy");
 const buttonProvider_1 = require("./buttonProvider");
 // OutputChannel 선언
 let outputChannel;
+// 전역 변수 선언
+let currentAnalysisResult; // 현재 분석 결과 중 1,2,3 순위를 string 배열로 저장해둠.
+let chosenOption; // 선택된 분석 결과를 표시하기 위한 인덱스.
 function activate(context) {
     console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
     // InteractionModel을 생성하는 코드 추가
@@ -106,7 +109,11 @@ function activate(context) {
         if (fileContent !== null) {
             try {
                 // 코드 분석을 시작하고 결과를 받아옵니다.
+                // 이 결과가 매우 중요. 기본 검색어로도 전달하고 클립보드에도 복사되도록 하면 좋겠다.
                 const analysisResult = await (0, externalAnalysisIO_1.externalAnalysisIO)(fileContent);
+                //경우에 따라 배열 인덱스로 한 값만 받아오는 것으로 변경할 가능성 있다!
+                currentAnalysisResult = analysisResult;
+                copyToClipboard(); //clipboard에 currentAnalysisResult 복사.
                 // OutputChannel에 결과를 표시합니다.
                 outputChannel.clear(); // 기존 내용을 지우고 새로운 결과를 출력
                 outputChannel.appendLine('Code analysis result:');
@@ -126,6 +133,8 @@ function activate(context) {
         else {
             vscode.window.showErrorMessage('파일 내용을 가져올 수 없습니다.');
         }
+        //분석이 완료되면 자동으로 askAnalyzedCode command 실행되어야 함.
+        await vscode.commands.executeCommand('CodeLingo.askAnalyzedCode');
     });
     //코드 분석 후 사용자에게 확인.
     let askAnalyzedCode = vscode.commands.registerCommand('CodeLingo.askAnalyzedCode', async () => {
@@ -134,6 +143,7 @@ function activate(context) {
         interactionModel.addInteraction(interaction);
         const answer = await vscode.window.showInformationMessage('Are you writing this type of code?', { modal: false }, 'Yes', 'No');
         if (answer === 'Yes') {
+            chosenOption = 0;
             // 사용자와의 상호작용을 InteractionModel에 추가
             const interaction = new interaction_1.Interaction("You chose YES, Start recommend", 'startRecommend');
             interactionModel.addInteraction(interaction);
@@ -156,13 +166,18 @@ function activate(context) {
     });
     // 다중 선택지 구현을 위한 함수
     async function showOptionsQuickPick() {
-        const options = ['Option 1', 'Option 2', 'Option 3', 'Request code analyze again!'];
+        const option1 = currentAnalysisResult[1];
+        const option2 = currentAnalysisResult[2];
+        const requestAnalyze = 'Request code analyze again!';
+        const options = [option1, option2, requestAnalyze];
+        //const options = ['Option 1', 'Option 2', 'Request code analyze again!'];
         // options는 배열이므로 하나씩 지정해서 추가 가능. 여러 선택지를 추가하세요
         const selectedOption = await vscode.window.showQuickPick(options, {
             placeHolder: 'Select an option',
         });
         if (selectedOption) {
             if (selectedOption === 'Request code analyze again!') {
+                chosenOption = -1;
                 // 사용자와의 상호작용을 InteractionModel에 추가
                 const interaction = new interaction_1.Interaction("Now analyze your code again", 're-analyze');
                 interactionModel.addInteraction(interaction);
@@ -170,6 +185,12 @@ function activate(context) {
                 // 여기에 코드를 다시 분석하는 동작을 추가합니다.
             }
             else {
+                if (selectedOption === option1) {
+                    chosenOption = 1;
+                }
+                else if (selectedOption === option2) {
+                    chosenOption = 2;
+                }
                 // 사용자와의 상호작용을 InteractionModel에 추가
                 const interaction = new interaction_1.Interaction(`${selectedOption} selected, Now recommend`, 'optionSelected + startRecommend');
                 interactionModel.addInteraction(interaction);
@@ -228,7 +249,7 @@ function activate(context) {
             const interaction = new interaction_1.Interaction("NO query entered", 'searchByKeyword');
             interactionModel.addInteraction(interaction);
             // 검색어가 입력되지 않았을 경우, 기본 검색어를 사용하여 구글 검색을 실행합니다.
-            const defaultSearchQuery = 'Analyzed your code'; // 여기에 원하는 기본 검색어를 입력하세요.
+            const defaultSearchQuery = `${currentAnalysisResult}`; // 여기에 원하는 기본 검색어를 입력하세요. => 코드 분석 내용 입력.
             const defaultSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(defaultSearchQuery)}`;
             vscode.env.openExternal(vscode.Uri.parse(defaultSearchUrl));
             vscode.window.showInformationMessage('No query input.');
@@ -239,6 +260,17 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
         myButtonProvider.refresh();
     }));
+    // 예시: 클립보드에 복사하는 함수
+    function copyToClipboard() {
+        vscode.env.clipboard.writeText(currentAnalysisResult[chosenOption])
+            .then(() => {
+            // 복사 성공 시 실행할 코드
+            console.log('텍스트가 클립보드에 복사되었습니다.');
+        }, (error) => {
+            // 오류 발생 시 실행할 코드
+            console.error('클립보드 복사 중 오류가 발생했습니다:', error);
+        });
+    }
 }
 exports.activate = activate;
 // This method is called when your extension is deactivated
