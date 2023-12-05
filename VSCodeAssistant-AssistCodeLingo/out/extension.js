@@ -36,6 +36,8 @@ const recommendationService_1 = require("./recommendationService");
 const externalAnalysisIO_1 = require("./externalAnalysisIO");
 // fileCopy 모듈 import
 const fileCopy_1 = require("./fileCopy");
+// buttonProvider 모듈 import
+const buttonProvider_1 = require("./buttonProvider");
 // OutputChannel 선언
 let outputChannel;
 function activate(context) {
@@ -47,6 +49,11 @@ function activate(context) {
     const recommendationProvider = new recommendationProvider_1.RecommendationProvider();
     // testIconView를 생성하여 Primary Sidebar에 추가
     const testIconView = vscode.window.createTreeView('testIconView', { treeDataProvider: recommendationProvider });
+    context.subscriptions.push(testIconView);
+    // ButtonProvider 생성 및 testIconView에 추가
+    const myButtonProvider = new buttonProvider_1.ButtonProvider();
+    const myButton = vscode.window.createTreeView('testIconView', { treeDataProvider: myButtonProvider });
+    context.subscriptions.push(myButton);
     // OutputChannel 초기화
     outputChannel = vscode.window.createOutputChannel('CodeLingo Output');
     let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
@@ -149,7 +156,8 @@ function activate(context) {
     });
     // 다중 선택지 구현을 위한 함수
     async function showOptionsQuickPick() {
-        const options = ['Option 1', 'Option 2', 'Option 3', 'Request code analyze again!']; // 여러 선택지를 추가하세요
+        const options = ['Option 1', 'Option 2', 'Option 3', 'Request code analyze again!'];
+        // options는 배열이므로 하나씩 지정해서 추가 가능. 여러 선택지를 추가하세요
         const selectedOption = await vscode.window.showQuickPick(options, {
             placeHolder: 'Select an option',
         });
@@ -178,7 +186,7 @@ function activate(context) {
             // 선택을 취소했을 때의 동작을 추가합니다.
         }
     }
-    // 코드 분석을 위한 함수
+    // 코드 추천을 위한 함수
     let recommendCode = vscode.commands.registerCommand('CodeLingo.recommend', () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction = new interaction_1.Interaction("Recommend usual code", 'recommendation');
@@ -187,6 +195,14 @@ function activate(context) {
         // 상호작용 모델을 통해 추천 코드를 가져오는 로직 또는 동적으로 생성하는 로직을 추가
         const recommendations = (0, recommendationService_1.getRecommendations)(); // 예시: recommendationService.ts에서 추천 코드를 가져오는 로직을 추가
         recommendationProvider.setRecommendations(recommendations);
+    });
+    // 도움 요청을 위한 함수
+    let requestAssist = vscode.commands.registerCommand('CodeLingo.assist', () => {
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new interaction_1.Interaction("Assist! Code Lingo", 'callAssiatant');
+        interactionModel.addInteraction(interaction);
+        vscode.window.showInformationMessage("What do you want to do?");
+        vscode.window.showInformationMessage("You can choose actions by buttons!");
     });
     //인터넷 검색을 위한 기능 구현.
     let searchingInternet = vscode.commands.registerCommand('CodeLingo.searching', async () => {
@@ -220,6 +236,9 @@ function activate(context) {
         }
     });
     context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode, getFileContent);
+    context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
+        myButtonProvider.refresh();
+    }));
 }
 exports.activate = activate;
 // This method is called when your extension is deactivated

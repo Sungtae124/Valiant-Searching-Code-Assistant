@@ -12,6 +12,8 @@ import { getRecommendations } from './recommendationService';
 import { externalAnalysisIO } from './externalAnalysisIO';
 // fileCopy 모듈 import
 import { readCurrentFileContent } from './fileCopy';
+// buttonProvider 모듈 import
+import { ButtonProvider } from './buttonProvider';
 
 // OutputChannel 선언
 let outputChannel: vscode.OutputChannel;
@@ -26,6 +28,13 @@ export function activate(context: vscode.ExtensionContext) {
     const recommendationProvider = new RecommendationProvider();
     // testIconView를 생성하여 Primary Sidebar에 추가
     const testIconView = vscode.window.createTreeView('testIconView', { treeDataProvider: recommendationProvider });
+    context.subscriptions.push(testIconView);
+
+    // ButtonProvider 생성 및 testIconView에 추가
+    const myButtonProvider = new ButtonProvider();
+    const myButton = vscode.window.createTreeView('testIconView', { treeDataProvider: myButtonProvider });
+    context.subscriptions.push(myButton);
+
     // OutputChannel 초기화
     outputChannel = vscode.window.createOutputChannel('CodeLingo Output');
 
@@ -40,11 +49,12 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('May I assist you?');
     });
 
+
     // 사용자의 코드를 분석하는 파이썬 코드 불러오기.
     // 코드 분석중에는 "분석중입니다."라고 표시
     // 코드 분석 완료시 notification으로 "이런 코드를 작성하고 계신가요?" 물어보고 버튼 클릭으로 답변.
 
-    
+
     // 파일의 코드를 가져오는 함수
     let getFileContent = vscode.commands.registerCommand('CodeLingo.getFileContent', () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
@@ -54,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
         // fileCopy.ts 모듈을 사용하여 현재 열린 파일의 코드를 가져옴
         const fileContent = readCurrentFileContent();
 
-        
+
         if (fileContent !== null) {
             // 파일 내용을 콘솔에 출력하거나 다른 원하는 동작 수행
             console.log('현재 열린 파일의 내용:');
@@ -104,7 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
                 analysisResult.forEach(line => {
                     outputChannel.appendLine(line);
                 });
-                
+
                 outputChannel.show(true); // OutputChannel 표시
 
             } catch (error: any) {
@@ -157,7 +167,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 다중 선택지 구현을 위한 함수
     async function showOptionsQuickPick() {
-        const options = ['Option 1', 'Option 2', 'Option 3', 'Request code analyze again!']; // 여러 선택지를 추가하세요
+        const options = ['Option 1', 'Option 2', 'Option 3', 'Request code analyze again!'];
+        // options는 배열이므로 하나씩 지정해서 추가 가능. 여러 선택지를 추가하세요
         const selectedOption = await vscode.window.showQuickPick(options, {
             placeHolder: 'Select an option',
         });
@@ -192,7 +203,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }
 
-    // 코드 분석을 위한 함수
+    // 코드 추천을 위한 함수
     let recommendCode = vscode.commands.registerCommand('CodeLingo.recommend', () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction = new Interaction("Recommend usual code", 'recommendation');
@@ -203,6 +214,16 @@ export function activate(context: vscode.ExtensionContext) {
         // 상호작용 모델을 통해 추천 코드를 가져오는 로직 또는 동적으로 생성하는 로직을 추가
         const recommendations = getRecommendations(); // 예시: recommendationService.ts에서 추천 코드를 가져오는 로직을 추가
         recommendationProvider.setRecommendations(recommendations);
+    });
+
+    // 도움 요청을 위한 함수
+    let requestAssist = vscode.commands.registerCommand('CodeLingo.assist', () => {
+        // 사용자와의 상호작용을 InteractionModel에 추가
+        const interaction = new Interaction("Assist! Code Lingo", 'callAssiatant');
+        interactionModel.addInteraction(interaction);
+
+        vscode.window.showInformationMessage("What do you want to do?");
+        vscode.window.showInformationMessage("You can choose actions by buttons!");
     });
 
     //인터넷 검색을 위한 기능 구현.
@@ -238,9 +259,15 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showInformationMessage('No query input.');
             vscode.window.showInformationMessage('Based on the analyzed user code, I enter recommended search terms.');
         }
+
+        
     });
 
     context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode, getFileContent);
+
+    context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
+        myButtonProvider.refresh();
+    }));
 }
 
 // This method is called when your extension is deactivated
