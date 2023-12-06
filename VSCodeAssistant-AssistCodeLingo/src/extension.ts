@@ -43,6 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
     outputChannel = vscode.window.createOutputChannel('CodeLingo Output');
 
 
+
     let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
         vscode.commands.executeCommand('workbench.view.extension.codelingoActivity');
 
@@ -204,7 +205,7 @@ export function activate(context: vscode.ExtensionContext) {
                 // 여기에 코드를 다시 분석하는 동작을 추가합니다.
                 // 재분석 요청 시 자동으로 letsAnalyzedCode command 실행되어야 함.
                 // 재분석 시 키워드 변경이나 제외 같은 로직은 파이썬 측에서 구현 필요.
-                await vscode.commands.executeCommand('CodeLingo.letsAnalyzedCode');
+                await vscode.commands.executeCommand('CodeLingo.letsAnalyzeCode');
 
             } else {
                 if (selectedOption === option1) {
@@ -282,6 +283,7 @@ export function activate(context: vscode.ExtensionContext) {
             const interaction = new Interaction("NO query entered", 'searchByKeyword');
             interactionModel.addInteraction(interaction);
 
+            // 코드 분석 이전의 기본 검색어를 Code Lingo로 설정.
             // 검색어가 입력되지 않았을 경우, 기본 검색어를 사용하여 구글 검색을 실행합니다.
             const defaultSearchQuery = `${currentAnalysisResult[chosenOption]}`; // 여기에 원하는 기본 검색어를 입력하세요. => 코드 분석 내용 입력. => 선택된 옵션 질문 1개만 기본 검색어로 설정.
             const defaultSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(defaultSearchQuery)}`;

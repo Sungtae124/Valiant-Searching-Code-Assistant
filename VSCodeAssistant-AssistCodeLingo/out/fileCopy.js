@@ -45,10 +45,13 @@ function readCurrentFileContent() {
     }
 }
 exports.readCurrentFileContent = readCurrentFileContent;
+/*
 // readCurrentFileContent 함수 호출
 const fileContent = readCurrentFileContent();
+
 if (fileContent !== null) {
     console.log('현재 열린 파일의 내용:');
     console.log(fileContent);
 }
+*/ 
 //# sourceMappingURL=fileCopy.js.map
