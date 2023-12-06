@@ -112,8 +112,6 @@ export function activate(context: vscode.ExtensionContext) {
 
                 //경우에 따라 배열 인덱스로 한 값만 받아오는 것으로 변경할 가능성 있다!
                 currentAnalysisResult = analysisResult;
-                
-                copyToClipboard();      //clipboard에 currentAnalysisResult 복사.
 
                 // OutputChannel에 결과를 표시합니다.
                 outputChannel.clear(); // 기존 내용을 지우고 새로운 결과를 출력
@@ -177,6 +175,8 @@ export function activate(context: vscode.ExtensionContext) {
 
             vscode.window.showInformationMessage(`It's Okay. Let me assist you later!`);
         }
+        // 구현 변경 필요. 선택된 질문을 복사하도록 했기 때문에 분석 코드 확인 이후로 옮김.
+        copyToClipboard();      //clipboard에 currentAnalysisResult 복사.
     });
 
     // 다중 선택지 구현을 위한 함수
@@ -202,11 +202,15 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showInformationMessage('Let me analyze your code again...');
 
                 // 여기에 코드를 다시 분석하는 동작을 추가합니다.
+                // 재분석 요청 시 자동으로 letsAnalyzedCode command 실행되어야 함.
+                // 재분석 시 키워드 변경이나 제외 같은 로직은 파이썬 측에서 구현 필요.
+                await vscode.commands.executeCommand('CodeLingo.letsAnalyzedCode');
+
             } else {
-                if(selectedOption === option1){
+                if (selectedOption === option1) {
                     chosenOption = 1;
                 }
-                else if(selectedOption === option2){
+                else if (selectedOption === option2) {
                     chosenOption = 2;
                 }
                 // 사용자와의 상호작용을 InteractionModel에 추가
@@ -279,7 +283,7 @@ export function activate(context: vscode.ExtensionContext) {
             interactionModel.addInteraction(interaction);
 
             // 검색어가 입력되지 않았을 경우, 기본 검색어를 사용하여 구글 검색을 실행합니다.
-            const defaultSearchQuery = `${currentAnalysisResult}`; // 여기에 원하는 기본 검색어를 입력하세요. => 코드 분석 내용 입력.
+            const defaultSearchQuery = `${currentAnalysisResult[chosenOption]}`; // 여기에 원하는 기본 검색어를 입력하세요. => 코드 분석 내용 입력. => 선택된 옵션 질문 1개만 기본 검색어로 설정.
             const defaultSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(defaultSearchQuery)}`;
             vscode.env.openExternal(vscode.Uri.parse(defaultSearchUrl));
             vscode.window.showInformationMessage('No query input.');
@@ -302,10 +306,10 @@ export function activate(context: vscode.ExtensionContext) {
                 // 복사 성공 시 실행할 코드
                 console.log('텍스트가 클립보드에 복사되었습니다.');
             },
-            (error) => {
-                // 오류 발생 시 실행할 코드
-                console.error('클립보드 복사 중 오류가 발생했습니다:', error);
-            });
+                (error) => {
+                    // 오류 발생 시 실행할 코드
+                    console.error('클립보드 복사 중 오류가 발생했습니다:', error);
+                });
     }
 }
 
