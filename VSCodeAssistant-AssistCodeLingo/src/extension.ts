@@ -19,8 +19,8 @@ import { ButtonProvider } from './buttonProvider';
 let outputChannel: vscode.OutputChannel;
 
 // 전역 변수 선언
-let currentAnalysisResult: string[];    // 현재 분석 결과 중 1,2,3 순위를 string 배열로 저장해둠.
-let chosenOption: number;               // 선택된 분석 결과를 표시하기 위한 인덱스.
+let currentAnalysisResult: string[] = ["Code Lingo"];    // 현재 분석 결과 중 1,2,3 순위를 string 배열로 저장해둠.
+let chosenOption: number = 0;               // 선택된 분석 결과를 표시하기 위한 인덱스.
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
@@ -295,7 +295,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     });
 
-    context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode, getFileContent);
+    context.subscriptions.push(askStart, askAnalyzedCode, requestAssist, searchingInternet, recommendCode, getFileContent);
 
     context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
         myButtonProvider.refresh();

@@ -41,8 +41,8 @@ const buttonProvider_1 = require("./buttonProvider");
 // OutputChannel 선언
 let outputChannel;
 // 전역 변수 선언
-let currentAnalysisResult; // 현재 분석 결과 중 1,2,3 순위를 string 배열로 저장해둠.
-let chosenOption; // 선택된 분석 결과를 표시하기 위한 인덱스.
+let currentAnalysisResult = ["Code Lingo"]; // 현재 분석 결과 중 1,2,3 순위를 string 배열로 저장해둠.
+let chosenOption = 0; // 선택된 분석 결과를 표시하기 위한 인덱스.
 function activate(context) {
     console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
     // InteractionModel을 생성하는 코드 추가
@@ -261,7 +261,7 @@ function activate(context) {
             vscode.window.showInformationMessage('Based on the analyzed user code, I enter recommended search terms.');
         }
     });
-    context.subscriptions.push(askStart, askAnalyzedCode, searchingInternet, recommendCode, getFileContent);
+    context.subscriptions.push(askStart, askAnalyzedCode, requestAssist, searchingInternet, recommendCode, getFileContent);
     context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
         myButtonProvider.refresh();
     }));
