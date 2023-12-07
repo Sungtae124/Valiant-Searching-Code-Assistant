@@ -1,23 +1,94 @@
 {
-  "name": "VSCodeAssistant-AssistCodeLingo",
-  "displayName": "Assist - Code Lingo",
+  "name": "vs-code-assistant-assist-code-lingo",
+  "displayName": "Assist! Code Lingo",
   "description": "Valiant Searching Code Assistant - Assist! Code Lingo",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.84.0"
   },
-  "categories": [
-    "Other"
-  ],
+  "categories": ["Other"],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "VSCodeAssistant-AssistCodeLingo.helloWorld",
+        "command": "CodeLingo.start",
+        "title": "Code Lingo start"
+      },
+      {
+        "command": "CodeLingo.letsAnalyzeCode",
+        "title": "Let's analyze your code!"
+      },
+      {
+        "command": "CodeLingo.askAnalyzedCode",
+        "title": "Do you writing this code?"
+      },
+      {
+        "command": "CodeLingo.searching",
+        "title":"What do you want to search?"
+      },
+      {
+        "command": "CodeLingo.assist",
         "title": "Assist! Code Lingo"
+      },
+      {
+        "command": "CodeLingo.recommend",
+        "title": "Let me recommend"
+      },
+      {
+        "command": "CodeLingo.getFileContent",
+        "title": "get file content"
+      },
+      {
+        "command": "CodeLingo.myButton",
+        "title": "My Button"
+      },
+      {
+        "command": "CodeLingo.refreshMyTreeView",
+        "title": "Refresh My TreeView"
       }
-    ]
+
+    ],
+    "menus": {
+      "activityBar": [
+        {
+          "id": "codelingoActivity",
+          "title": "Assist! Code Lingo",
+          "icon": "./Icons/IconWhite.png",
+          "command": "CodeLingo.start"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codelingoActivity",
+          "title": "Assist! Code Lingo",
+          "icon": "./Icons/IconWhite.png"
+        }
+      ],
+      "testIconView": [
+        {
+          "id": "testIconView",
+          "title": "Code Lingo와 함께 작업하세요!",
+          "icon": "./Icons/IconWhite.png"
+        }
+      ]
+    },
+    "views": {
+      "codelingoActivity": [
+        {
+          "id": "testIconView",
+          "name": "Code Lingo와 함께 작업하세요!",
+          "icon": "./Icons/IconWhite.png" 
+        },
+        {
+          "id": "interactions",
+          "name": "Interactions",
+          "icon": "./Icons/IconWhite.png"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
