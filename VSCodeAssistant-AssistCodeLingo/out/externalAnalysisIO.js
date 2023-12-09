@@ -35,12 +35,14 @@ async function externalAnalysisIO(inputValue) {
             reject('Open a file to analyze the code.');
             return;
         }
+        // 입력값의 줄 수를 세어 줄 수 정보를 추가합니다.
+        const lineCount = inputValue.split('\n').length;
         // 현재 실행 중인 스크립트 파일의 디렉토리를 얻습니다.
         const scriptDir = path.dirname(__dirname);
         // 코드 분석 스크립트의 경로를 계산합니다.
         const scriptPath = path.join(scriptDir, 'codeAnalyzeMachine', 'analyze.py');
         // 변경: spawn 대신 spawnSync 사용
-        const result = cp.spawnSync('python', [scriptPath], {
+        const result = cp.spawnSync('python', [scriptPath, String(lineCount)], {
             input: inputValue,
             encoding: 'utf-8',
             // stdio: 'pipe', // 필요에 따라 stdio 설정을 조정할 수 있습니다.
