@@ -8,7 +8,13 @@ class Word2Vec:
         
         self.sentences = tokenizer.result
         self.tokens = tokenizer.tokens
-        self.model = wv(sentences=self.sentences, vector_size=round(tokenizer.num_tokens**0.25), window=window, min_count=min_count, workers=workers, epochs=epochs)    
+        self.model = wv(sentences=self.sentences, vector_size=round(tokenizer.num_tokens**0.25), window=window, min_count=min_count, workers=workers, epochs=epochs)
+
+        #print(self.sentences)
+        #raise Exception("Fuxxxxxing error please", self.sentences)
+        #self.model = wv(vector_size=round(tokenizer.num_tokens**0.25), window=window, min_count=min_count, workers=workers, epochs=epochs) 
+        #self.model.build_vocab(self.sentences)
+        #self.model.train(self.sentences)    
 
 
 class FastText:
