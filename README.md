@@ -1,2 +1,320 @@
-# Valiant-Searching-Code-Assistant
-VS Code Assistant - Assist! Code Lingo
+# ReadMe.md
+
+![IMG_0152.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/IMG_0152.png)
+
+---
+
+# Valiant-Searching Code Assistant
+
+## VS Code Assistant - Assist! Code Lingo
+
+**<Assist! Code Lingo>**는 작성 중인 파이썬 코드를 분석하여 사용자에게 함수 및 알고리즘 추천, 자동 코드 완성, 분석 내용 인터넷 검색 등의 기능을 제공하는 **VSCode Extension**입니다.
+
+
+## Motivation
+
+최근에 가장 범용적으로 사용되는 IDE를 꼽자면 단연 VSCode일 것입니다. 
+
+Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁게 하는 테마들, 당신의 코드를 완성시켜줄 기능을 더해준다는 점이 그 이유일 것입니다. 
+
+우리는 여기서 Idea를 얻었습니다. 
+
+어떤 기능을 하더라도 Extension의 형태로 한 번 만들어보자..!
+
+그렇게 시작한 이 프로젝트는 Valiant-Searching(VS) 이라는 키워드에 맞게 훌륭한 탐색을 통해 사용자의 코드를 분석하고 다음과 같은 기능을 갖추게 되었습니다.
+
+- 코드 분석을 통한 함수 및 알고리즘 추천
+- 사용자 요청에 의한 코드 추천 및 자동 완성 Assistant
+- 분석된 코드에 대한 질문을 자동으로 포함하는 구글 검색 기능
+
+(기능별 움짤 4분할 정도 해서 첨부)
+
+해당 기능들은 모두 Sidebar에 위치한 버튼으로 실행시킬 수 있으며, 매우 긴밀하게 협력하여 당신의 코딩을 도와줍니다!
+
+## 목차
+
+- 설치
+- 사용법 - 구현 위치 별 설명
+- 기능 구현 별 설명
+- 기능 구현에 사용된 모델 성능 평가
+- 사용된 API
+- License
+- 참고자료
+- 개발 관련 사항
+    - 개발 진행 중인 사항
+    - 개발 예정 사항
+
+
+## 사용법
+
+### 구현 위치 별 설명
+
+기존에 VSCode와 Extension을 설치하여 사용해보신 분들은 직관적으로 바로 사용하실 수 있습니다.
+
+처음 사용하시는 분들도 추가적인 설명 없이 쓸 수 있도록 설계했지만, 혹시 궁금한 점이 있다면 아래의 설명을 참고해주세요!
+
+![architecture-containers.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/architecture-containers.png)
+
+(from. [https://code.visualstudio.com/api/ux-guidelines/overview](https://code.visualstudio.com/api/ux-guidelines/overview))
+
+### 1. Activity Bar → Code Lingo’s Icon
+
+- Icon을 클릭하면 Code Lingo와 상호작용 할 수 있는 View가 Primary Sidebar에서 열립니다.
+
+### 2. Primary Sidebar - Buttons & Interaction View
+
+- **Buttons**
+    
+    ![Buttons.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/Buttons.png)
+    
+    - 사용자는 버튼을 통해서 사전 등록된 명령어와 연결된 각 기능을 실행시킬 수 있으며, 이 명령어들은 유기적으로 동작합니다. 자세한 설명은 기능 구현 별 설명에 첨부하였습니다.
+    - Start Code Lingo : Code Lingo가 호출되고 인사해줍니다.
+    - Analyze Code : 코드를 분석한 뒤 키워드를 기반으로 질문 형태로 나타내 줍니다.
+    - Assist! Code Lingo : 기능을 다시 알려주고 코드 자동 완성 기능을 제공합니다.
+    - Request Recommendation : 분석된 코드를 기반으로 추천 코드를 보여줍니다.
+    - Search on Google :
+        - 분석된 코드 기반으로 생성된 질문을 기본 검색어로 받아와 검색합니다. (Enter키 한번)
+        - 검색어를 직접 입력 받아 검색할 수 있습니다.
+        - 기본 브라우저의 새 창으로 띄워줍니다.
+- **Interaction View**
+- Code Lingo의 기본 안내 메세지들은 좌측의 Interactions로 표시됩니다.
+    - 각 command가 실행되며 사용자에게 진행 상황과 관련 정보를 보여줍니다.
+- 어떤 명령어가 실행되었는지 보여줌으로써 Extension이 정상적으로 동작하는지 확인할 수 있습니다.
+    
+    ![Interactions.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/Interactions.png)
+    
+
+(사진 첨부)
+
+### 3. Information Message(다시 작성 필요)(사진 첨부)
+
+- 사용자에게 직접 알려줘야 하는 정보에 대해서 별도로 Message를 띄워줍니다.
+
+![Notification & Information.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/Notification__Information.png)
+
+### 4. Notifications
+
+- 코드 분석 후 사용자에게 분석된 정보를 담은 질문이 적절한지 물어보고, 사용자는 버튼으로 간단하게 답변이 가능합니다.
+    - Yes : 현재 질문이 적절하다는 응답으로, 이 질문을 기반으로 관련 함수나 알고리즘을 추천해 드립니다.
+    - No : 현재 질문이 부정확하다는 응답이므로, 생성된 질문 중 2,3 번째 질문을 옵션으로 제공하여 사용자가 선택할 수 있도록 합니다.
+    - 옵션 중 “Request analysis”를 선택 시 코드 분석을 다시 요청합니다.
+    - 미응답 : 추후에 다시 분석을 진행하고 응답을 받도록 안내합니다.
+- 사용자가 버튼을 통해 선택한 응답에 따라 질문이 저장됩니다.
+    - 이 질문은 검색 기능의 기본 검색어로 저장됩니다.
+    - 이 질문이 클립보드에 복사되어 바로 붙여넣기가 가능합니다.
+
+(사진 첨부)
+
+### 5-1. QuickPick
+
+![QuickPick.jpg](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/QuickPick.jpg)
+
+- 3가지 옵션을 제공하여 사용자가 선택하면 해당하는 동작을 수행합니다.
+    - 분석된 코드로부터 생성된 질문 중에 사용자에게 선택 옵션을 제공합니다.
+    - 코드 재분석 요청 옵션을 제공합니다.
+
+(사진 첨부)
+
+### 5-2. Output Channel
+
+![Output.jpg](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/Output.jpg)
+
+- 코드가 분석된 후에 반환하는 결과 질문을 정확도 순서대로 3개까지 보여줍니다.
+- 사용자는 질문을 확인한 뒤 Notification과 QuickPick으로 응답이 가능합니다.
+
+(사진 첨부)
+
+### 5-3. Quick Input
+
+![QuickInput.jpg](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/QuickInput.jpg)
+
+- Search on Google 버튼 클릭시 입력값을 받습니다.
+
+(사진 첨부)
+
+(사진 첨부 시 중복된 정보는 제거하도록 노력.)
+
+## 기능 구현 별 설명 (개발자들을 위한 설명)
+
+Button / Interaction (View) / Information message Notification, Quick Pick, Output Channel / Console / Command
+
+### 1. 호출 및 실행
+
+- Button : Start Code Lingo
+- Command : CodeLingo.start
+- Title : Code Lingo start
+- 동작 : 명령 실행 시 “Code Lingo is started! May I assist you?”라고 물으며 인사합니다.
+
+### 2. 코드 내용 복사
+
+- Command : CodeLingo.getFileContent
+- Title : get file content
+- 연결 파일 : fileCopy.ts
+- 함수 : readCurrentFileContent()
+- 동작 : VSCode 내에 열려있는 외부 경로의 코드 내용을 동기적으로 읽어서 문자열로 반환합니다.
+- “Getting file content”
+    - console.log로 VSCode에 열려있는 스크립트 내용이 성공적으로 복사되었는지 확인이 가능합니다. “파일 내용을 가져왔습니다. “
+    - fileCopy.ts 측에서 스크립트 복사 시에 에러가 있다면 콘솔로 알려줍니다.
+        - “파일을 읽는 도중 오류가 발생했습니다.”
+- fileContent가 정상적으로 불러와지지 않았다면 : “파일 내용을 가져올 수 없습니다.” 출력.
+
+(사진 첨부)
+
+### 3. 코드 분석
+
+- Button : Analyze Code
+- Command : CodeLingo.letsAnalyzeCode
+- Title : Let’s analyze your code!
+- 연결 파일 : fileCopy.ts & externalAnalysisIO.ts & analyze.py
+- 동작 : **********************************************************[3-1. 외부 코드 입출력]********************************************************** **+ [4. 코드 분석 이후]** 자동 실행
+- “Let’s analyze your code!”
+    - try - catch를 사용한 Error Handling
+    - externalAnalysisIO.ts에서 analyze.py가 정상적으로 종료되면
+        - “Code analysis succeeded!”
+    - 오류 또는 비정상 종료 시
+        - `Code analysis failed with exit code ${result.status}.`
+        - reject(`Code analysis failed with exit code ${result.status}.`)
+
+(사진 첨부)
+
+### 3-1. 외부 코드 입출력
+
+- 별도의 Command 설정 없이 extension.ts 파일의 letsAnalyzeCode 명령어 내부에서 구현되었습니다.
+- 연결 파일 : externalAnalysisIO.ts & analyze.py
+- 동작 : letsAnalyzeCode 명령어 내부에서 코드 분석 파일인 analyze.py에게 복사해온 코드 전체를 표준 입력을 이용해 string으로 넘겨줍니다.
+    
+    분석 진행 후 결과값을 string[]로 받아와서 Output Channel에서 보여줍니다.
+    
+    - “Code analysis result: “
+    - 결과 리턴 시 에러가 있을 경우 Information Message로 띄워줍니다.
+
+(사진 첨부)
+
+### 4. 분석 결과 확인
+
+- Command : CodeLingo.askAnalyzedCode
+- Title : Do you writing this code?
+- 연결 함수 : copyToClipBoard
+- 동작 : 분석한 코드로부터 도출된 질문이 맞는지 사용자에게 확인합니다.
+- “Are you writing this type of code?”
+- **Notification 활용**
+    - Yes : 현재 질문이 적절하다는 응답으로, 이 질문을 기반으로 관련 함수나 알고리즘을 추천해 드립니다.
+        - “Great! Let me assist you.”
+        - “I will recommend functions and algorithms.”
+    - 미응답 : 추후에 다시 분석을 진행하고 응답을 받도록 안내합니다.
+        - “It's Okay. Let me assist you later!”
+- **QuickPick 활용**
+    - No : 현재 질문이 부정확하다는 응답이므로, 생성된 질문 중 2,3 번째 질문을 QuickPick의 옵션으로 제공하여 사용자가 선택할 수 있도록 합니다.
+        - "You chose No, let me show you options”
+        - `You selected ${selectedOption}!`
+        - “I will recommend functions and algorithms.”
+    - 옵션 중 ‘Request analysis’를 선택 시 코드 분석을 다시 요청합니다.
+        - “Let me analyze your code again..”
+        - **3. 코드 분석** 진행
+    - 만약 QuickPick 창에서 그냥 나간다면..
+        - “You did not select any option.”
+- 사용자가 선택한 질문의 인덱스를 chosenOption 변수에 저장합니다.
+    - Yes(1번 질문) ⇒ **0** / No ⇒ option 1(2번 질문) : **1** / option 2(3번질문) : **2** / re-analyze(분석 재요청) : **-1**
+- 사용자가 버튼을 통해 선택한 응답에 따라 질문이 저장됩니다.
+    - 선택된 질문은 검색 기능의 기본 검색어로 저장됩니다.
+    - 선택된 질문이 클립보드에 복사 되어 바로 붙여넣기가 가능합니다.
+
+### 5. 검색 기능
+
+- Button : Search on Google
+- Command : CodeLingo.searching
+- Title : What do you want to search?
+- 동작 : Quick Input을 통해 사용자에게 검색어를 입력 받습니다. + “Please enter query”
+- Quick Input: “Enter your search query.”, “What do you want to search?”
+- 코드 분석 이전의 기본 검색어는 Code Lingo로 설정되어 있습니다.
+- 검색어를 입력하지 않고 엔터 시 선택된 질문을 기본 검색어로 설정하여 검색을 실시합니다.
+    - “No query input.”
+    - “"I enter selected option as query.”
+- 구글 검색을 실행 후 검색 결과를 기본 브라우저의 새 창으로 열어줍니다.
+
+### (구현 필요)
+
+### 6. 코드 추천 기능
+
+- Button : Request recommendation
+- Command : CodeLingo.recommend
+- Title : Let me recommend
+- 동작 : 사용자에게 추천 코드를 보여줍니다. + "Recommend usual code”
+- (“Now I will serve you recommend CODE!”라고 임시로..**→추천 코드는 어떻게 보여줄 것인가?**)
+
+### 7. Assist! 기능
+
+- Button : Assist! Code Lingo
+- Command : CodeLingo.assist
+- Title : Assist! Code Lingo
+- 동작 : 우선 사용자에게 버튼으로 동작할 수 있는 기능들을 알려줍니다.
+- "Assist! Code Lingo”, "What do you want to do?”, "You can choose actions by buttons!”
+- (이후 코드 자동 완성 기능을 구현 시 연결 예정)
+
+### (2번, 3번 내용에 대한 추가 코멘트)
+
+- 파일 경로 설정에 대해 많은 고민 끝에 현재의 코드에 사용된 방식으로 고정하였습니다.
+- 외부 파일을 여는 상황(getFileContent 명령어와 fileCopy.ts)에서는 VSCode 에디터 내에 열려있는 폴더와 스크립트의 경로를 기준으로 하여 탐색합니다.
+    
+    ```tsx
+    const editor = vscode.window.activeTextEditor;
+    //에디터 내에 열려있는 스크립트의 경로를 탐색합니다.
+    const currentFilePath = editor.document.uri.fsPath;
+    ```
+    
+- 파이썬으로 구현된 코드 분석 모델을 사용하기 위해서는 다음과 같이 경로를 설정하였습니다.
+    - externalAnalysisIO.ts를 extension.ts가 포함된 src폴더 내부에 위치 시켰습니다.
+    - codeAnalyzeMachine 폴더를 전체 Extension의 루트 폴더 하위에 위치 시켰습니다. (src 폴더와 동등한 루트 아래)
+    - 상대 경로를 파악하여 externalAnalysisIO.ts 기준
+        - 상위 폴더 이동 → codeAnalyzeMachine 폴더로 이동 → [analyze.py](http://analyze.py) 접근
+        
+        이러한 방식으로 접근하였습니다.
+        
+    
+    ```tsx
+    // 현재 실행 중인 스크립트 파일의 디렉토리를 얻습니다.
+    const scriptDir = path.dirname(__dirname);
+    // 코드 분석 스크립트의 경로를 계산합니다.
+    const scriptPath = path.join(scriptDir, 'codeAnalyzeMachine', 'analyze.py');
+    ```
+    
+- 기존의 방식은 이렇게 되어있었습니다. 현재는 fileCopy.ts와 externalAnalysisIO.ts로 분리되었기 때문에 변경되었습니다. (파일이 열려있는 경로와 파일명을 조합하여 경로를 지정하는 방식)
+    
+    ```tsx
+    const currentFilePath = editor.document.uri.fsPath;
+    const fileName = path.basename(currentFilePath); // 파일 이름 가져오기
+    const scriptPath = path.join(path.dirname(currentFilePath), fileName);
+    ```
+    
+
+## 기능 구현에 사용된 모델 성능 평가
+
+## 사용된 API
+
+## License
+
+- 기본적으로 MIT License를 따릅니다.
+- 저희는 이 코드가 최대한 널리 퍼지고, 수정되는 것을 목적으로 개발을 시작하였기 때문에 얼마든지 활용하셔도 좋습니다. 출처만 남겨주세요!
+- 이 코드를 직접 수정해주실 의향이 있다면 메일로 연락 주시면 감사하겠습니다.
+- 기타 여러가지 조언이나 말씀은 자유롭게 연락 주시면 그 또한 적극적으로 검토하겠습니다.
+
+## 참고자료
+
+### Extension 개발 파트
+
+- VS Code extension API 공식 문서
+    
+    [https://code.visualstudio.com/api/get-started/your-first-extension](https://code.visualstudio.com/api/get-started/your-first-extension)
+    
+- [Vscode extionsion API](https://code.visualstudio.com/api)의 한국어 번역
+    
+    [https://github.com/pg-vscode-extn-kr/pg-vscode-extn-kr.github.io/tree/master](https://github.com/pg-vscode-extn-kr/pg-vscode-extn-kr.github.io/tree/master)
+    
+- 개발 자체에 직접적인 참고는 아니지만 TypeScript 이해를 위해 참고한 강의들입니다.
+    - 코딩앙마 님의 JavaScript 초, 중급 & TypeScript 강의 [(Youtube)](https://www.youtube.com/playlist?list=PLZKTXPmaJk8KhKQ_BILr1JKCJbR0EGlx0)
+
+## 개발 관련 사항
+
+### 개발 진행 중인 사항
+
+### 개발 예정 사항
