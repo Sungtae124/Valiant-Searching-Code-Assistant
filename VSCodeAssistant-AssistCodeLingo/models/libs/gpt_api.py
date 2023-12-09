@@ -1,24 +1,29 @@
 from openai import OpenAI
 
 KEY = ''
-ORGINIZATION_ID = 'org-tJR4mOQyItBZUWA4EwP2qVu0'
-client = OpenAI(api_key=KEY, organization=ORGINIZATION_ID)
+client = OpenAI(api_key=KEY)
 
-def get_response(words):
+def get_questions(words):
 
-    response = client.chat.completions.create(
+    question = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a search query generator, creating natural queries by seamlessly combining some of the given words."},
+            {"role": "system", "content": "Create three natural questions by seamlessly combining some of the given words."},
             {"role": "user", "content": ', '.join(words)},
         ],
     )
 
-    output = client.chat.completions.create(
+    return question.choices[0].message.content
+
+
+def get_response(question):
+    
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "user", "content": response.choices[0].message.content},
+            {"role": "user", "content": "You are a python tutor."},
+            {"role": "user", "content": question},
         ],
     )
 
-    print(output.choices[0].message.content)
+    return response.choices[0].message.content
