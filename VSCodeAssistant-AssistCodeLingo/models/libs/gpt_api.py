@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-KEY = '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'
+KEY = ''
 ORGINIZATION_ID = 'org-tJR4mOQyItBZUWA4EwP2qVu0'
 client = OpenAI(api_key=KEY, organization=ORGINIZATION_ID)
 

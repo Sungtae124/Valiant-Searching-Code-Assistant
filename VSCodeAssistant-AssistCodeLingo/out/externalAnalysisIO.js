@@ -40,7 +40,7 @@ async function externalAnalysisIO(inputValue) {
         // 현재 실행 중인 스크립트 파일의 디렉토리를 얻습니다.
         const scriptDir = path.dirname(__dirname);
         // 코드 분석 스크립트의 경로를 계산합니다.
-        const scriptPath = path.join(scriptDir, 'codeAnalyzeMachine', 'analyze.py');
+        const scriptPath = path.join(scriptDir, 'models', 'main.py');
         // 변경: spawn 대신 spawnSync 사용
         const result = cp.spawnSync('python', [scriptPath, String(lineCount)], {
             input: inputValue,
