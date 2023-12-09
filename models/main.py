@@ -1,5 +1,6 @@
 from libs.tokenizer import tokenizer
 from libs.models import Word2Vec, FastText, get_result
+from libs.gpt_api import get_response
 import sys
 
 if __name__ == '__main__':
@@ -20,4 +21,4 @@ if __name__ == '__main__':
     result = {key: wv_result.get(key, 0) + ft_result.get(key, 0) for key in set(wv_result) | set(ft_result)}
     result = [s.replace('_', ' ') for s in list(result.keys())]
     
-    print(result)
+    get_response(result)
