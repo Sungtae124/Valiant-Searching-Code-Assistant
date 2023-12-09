@@ -1,5 +1,6 @@
 from gensim.models import Word2Vec as wv
 from gensim.models import FastText as ft
+import numpy as np
 
 
 class Word2Vec:
@@ -18,7 +19,7 @@ class FastText:
         self.model = ft(sentences=self.sentences, vector_size=round(tokenizer.num_tokens**0.25), window=window, min_count=min_count, workers=workers, epochs=epochs)
 
     
-def get_result(model) -> dict:
+def get_result(model) -> list:
             
         doc_confidence = {}
 
@@ -27,5 +28,12 @@ def get_result(model) -> dict:
                 doc_confidence.setdefault(similar_token, 0)
                 doc_confidence[similar_token] += conf
 
-        result = sorted(doc_confidence.items(), key=lambda x: x[1], reverse=True)
-        return result
+
+        values = np.array(list(doc_confidence.values()))
+
+        # softmax
+        exp_values = np.exp(values)
+        softmax_values = exp_values / np.sum(exp_values, axis=0)
+
+        doc_confidence = {key: val for key, val in zip(doc_confidence.keys(), softmax_values)}
+        return doc_confidence
