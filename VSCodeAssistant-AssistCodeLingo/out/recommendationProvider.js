@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecommendationProvider = void 0;
 class RecommendationProvider {
-    recommendations = [];
+    recommendations = '';
     outputChannel;
     constructor(outputChannel) {
         this.outputChannel = outputChannel;
@@ -15,9 +15,7 @@ class RecommendationProvider {
     updateOutputChannel() {
         this.outputChannel.clear();
         this.outputChannel.appendLine('Recommended Codes:');
-        this.recommendations.forEach(code => {
-            this.outputChannel.appendLine(code);
-        });
+        this.outputChannel.append(this.recommendations);
         this.outputChannel.show(true);
     }
 }

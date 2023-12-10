@@ -30,8 +30,6 @@ const vscode = __importStar(require("vscode"));
 const interaction_1 = require("./interaction");
 //코드 추천 부분을 recommendationProvider에서 가져오기.
 const recommendationProvider_1 = require("./recommendationProvider");
-// 코드 추천 함수 부분 구현을 별도 클래스에서 가져오기.
-const recommendationService_1 = require("./recommendationService");
 // 코드 분석 구현을 codeAnalyzer에서 가져오기
 const externalAnalysisIO_1 = require("./externalAnalysisIO");
 // fileCopy 모듈 import
@@ -43,6 +41,7 @@ let outputChannel;
 // 전역 변수 선언
 let currentAnalysisResult = ["Code Lingo", "option1", "option2"]; // 현재 분석 결과 중 1,2,3 순위를 string 배열로 저장해둠. & 기본 검색어를 위해 0번 인덱스에 "Code Lingo" 저장
 let chosenOption = 0; // 선택된 분석 결과를 표시하기 위한 인덱스.
+let recommendedCode = "example recommendation";
 function activate(context) {
     console.log('Congratulations, your extension "Assist! CodeLingo" is now active!');
     // InteractionModel을 생성하는 코드 추가
@@ -56,16 +55,14 @@ function activate(context) {
     outputChannel = vscode.window.createOutputChannel('CodeLingo Output');
     // RecommendationProvider 생성 및 등록
     const recommendationProvider = new recommendationProvider_1.RecommendationProvider(outputChannel);
+    // Code Lingo 호출
     let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
         vscode.commands.executeCommand('workbench.view.extension.codelingoActivity');
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction = new interaction_1.Interaction("Code Lingo is started! May I assist you?", 'start');
         interactionModel.addInteraction(interaction);
     });
-    // 사용자의 코드를 분석하는 파이썬 코드 불러오기.
-    // 코드 분석중에는 "분석중입니다."라고 표시
-    // 코드 분석 완료시 notification으로 "이런 코드를 작성하고 계신가요?" 물어보고 버튼 클릭으로 답변.
-    // 파일의 코드를 가져오는 함수
+    // 파일의 코드를 가져오는 명령어
     let getFileContent = vscode.commands.registerCommand('CodeLingo.getFileContent', () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction = new interaction_1.Interaction("Getting file content", 'getFileContent');
@@ -81,7 +78,7 @@ function activate(context) {
             console.error('파일 내용을 가져올 수 없습니다.');
         }
     });
-    // 코드 분석을 위한 함수
+    // 코드 분석을 위한 명령어
     let letsAnalyzeCode = vscode.commands.registerCommand('CodeLingo.letsAnalyzeCode', async () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction = new interaction_1.Interaction("Let's analyze your code!", 'analyze');
@@ -89,11 +86,9 @@ function activate(context) {
         // 파일의 코드를 가져오는 함수 호출
         const fileContent = (0, fileCopy_1.readCurrentFileContent)();
         if (fileContent !== null) {
-            // 파일 내용을 콘솔에 출력하거나 다른 원하는 동작 수행
+            // 파일 내용 콘솔에 출력
             console.log('현재 열린 파일의 내용:');
             console.log(fileContent);
-            // 여기에서 fileContent를 활용하여 원하는 로직 수행
-            // 예: 코드 분석, 추천 등
         }
         else {
             console.error('파일 내용을 가져올 수 없습니다.');
@@ -102,7 +97,6 @@ function activate(context) {
         if (fileContent !== null) {
             try {
                 // 코드 분석을 시작하고 결과를 받아옵니다.
-                // 이 결과가 매우 중요. 기본 검색어로도 전달하고 클립보드에도 복사되도록 하면 좋겠다.
                 const analysisResult = await (0, externalAnalysisIO_1.externalAnalysisIO)(fileContent);
                 currentAnalysisResult = analysisResult;
                 // OutputChannel에 결과를 표시합니다.
@@ -122,7 +116,7 @@ function activate(context) {
         else {
             console.error('파일 내용을 가져올 수 없습니다.');
         }
-        //분석이 완료되면 자동으로 askAnalyzedCode command 실행되어야 함.
+        //분석이 완료되면 자동으로 askAnalyzedCode command 실행
         await vscode.commands.executeCommand('CodeLingo.askAnalyzedCode');
     });
     //코드 분석 후 사용자에게 확인.
@@ -138,8 +132,9 @@ function activate(context) {
             interactionModel.addInteraction(interaction1);
             const interaction2 = new interaction_1.Interaction("I will recommend functions and algorithms.", 'startRecommend');
             interactionModel.addInteraction(interaction2);
-            // 여기에 Yes를 선택했을 때의 동작을 추가합니다. 함수 및 알고리즘 추천 구현 필요.
-            copyToClipboard(); //clipboard에 currentAnalysisResult 복사.
+            // 선택된 질문 클립보드에 복사 & 코드 자동 추천
+            copyToClipboard();
+            recommendedCode = await (0, externalAnalysisIO_1.externalRecommendationIO)(currentAnalysisResult[chosenOption]);
         }
         else if (answer === 'No') {
             // 사용자와의 상호작용을 InteractionModel에 추가
@@ -155,7 +150,6 @@ function activate(context) {
     });
     // 다중 선택지 구현을 위한 함수
     async function showOptionsQuickPick() {
-        //console.log("show Quick Pick Option");
         let option1 = "Question 2";
         let option2 = "Question 3";
         const requestAnalyze = 'Request code analyze again!';
@@ -170,9 +164,7 @@ function activate(context) {
                 // 사용자와의 상호작용을 InteractionModel에 추가
                 const interaction = new interaction_1.Interaction("Let me analyze your code again...", 're-analyze');
                 interactionModel.addInteraction(interaction);
-                // 여기에 코드를 다시 분석하는 동작을 추가합니다.
-                // 재분석 요청 시 자동으로 letsAnalyzedCode command 실행되어야 함.
-                // 재분석 시 키워드 변경이나 제외 같은 로직은 파이썬 측에서 구현 필요.
+                // 코드 분석 명령어 재실행
                 await vscode.commands.executeCommand('CodeLingo.letsAnalyzeCode');
             }
             else {
@@ -187,15 +179,15 @@ function activate(context) {
                 interactionModel.addInteraction(interaction1);
                 const interaction2 = new interaction_1.Interaction(`I will recommend functions and algorithms.`, 'startRecommend');
                 interactionModel.addInteraction(interaction2);
-                // 선택한 옵션에 대한 동작을 추가합니다.
+                // 선택된 질문 클립보드에 복사 & 코드 자동 추천
                 copyToClipboard(); //clipboard에 currentAnalysisResult 복사.
+                recommendedCode = await (0, externalAnalysisIO_1.externalRecommendationIO)(currentAnalysisResult[chosenOption]);
             }
         }
         else {
             // 사용자와의 상호작용을 InteractionModel에 추가
             const interaction = new interaction_1.Interaction("You did not select any option", 'notSelectOption');
             interactionModel.addInteraction(interaction);
-            // 선택을 취소했을 때의 동작을 추가합니다.
         }
     }
     // 코드 추천을 위한 함수
@@ -203,10 +195,9 @@ function activate(context) {
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction = new interaction_1.Interaction("Recommend usual code", 'recommendation');
         interactionModel.addInteraction(interaction);
-        vscode.window.showInformationMessage("Now I will serve you recommend CODE!");
         // 상호작용 모델을 통해 추천 코드를 가져오는 로직 또는 동적으로 생성하는 로직을 추가
-        const recommendations = (0, recommendationService_1.getRecommendations)(); // 예시: recommendationService.ts에서 추천 코드를 가져오는 로직을 추가
-        console.log(recommendations);
+        const recommendations = recommendedCode;
+        //console.log(recommendations);
         recommendationProvider.setRecommendations(recommendations);
     });
     // 도움 요청을 위한 함수
@@ -244,14 +235,13 @@ function activate(context) {
             interactionModel.addInteraction(interaction1);
             const interaction2 = new interaction_1.Interaction("I enter selected option as query", 'searchByBasicQuery');
             interactionModel.addInteraction(interaction2);
-            // 코드 분석 이전의 기본 검색어를 Code Lingo로 설정.
+            // 코드 분석 이전의 기본 검색어는 Code Lingo로 설정.
             // 검색어가 입력되지 않았을 경우, 기본 검색어를 사용하여 구글 검색을 실행합니다.
-            const defaultSearchQuery = currentAnalysisResult[chosenOption]; // 여기에 원하는 기본 검색어를 입력하세요. => 코드 분석 내용 입력. => 선택된 옵션 질문 1개만 기본 검색어로 설정.
+            const defaultSearchQuery = currentAnalysisResult[chosenOption]; // 선택된 옵션 질문 1개만 기본 검색어로 설정.
             const defaultSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(defaultSearchQuery)}`;
             vscode.env.openExternal(vscode.Uri.parse(defaultSearchUrl));
         }
     });
-    // recommendCode 임시로 제거.
     context.subscriptions.push(askStart, askAnalyzedCode, requestAssist, searchingInternet, getFileContent, recommendCode);
     context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
         myButtonProvider.refresh();
