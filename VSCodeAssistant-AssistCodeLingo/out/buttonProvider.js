@@ -47,10 +47,6 @@ class ButtonProvider {
                     command: 'CodeLingo.assist',
                     title: 'Assist! Code Lingo'
                 }),
-                new MyTreeItem('Request recommendation', vscode.TreeItemCollapsibleState.None, {
-                    command: 'CodeLingo.recommend',
-                    title: 'Request recommendation'
-                }),
                 new MyTreeItem('Search on Google', vscode.TreeItemCollapsibleState.None, {
                     command: 'CodeLingo.searching',
                     title: 'Search on Google'

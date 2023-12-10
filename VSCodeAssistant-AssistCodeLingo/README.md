@@ -1,6 +1,8 @@
 # VSCodeAssistant-AssistCodeLingo README
 
-This is the README for your extension "VSCodeAssistant-AssistCodeLingo". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "VSCodeAssistant-AssistCodeLingo
+
+# Extension generator 사용 시 기본으로 생성되는 ReadMe 파일입니다. 현재 배포되지 않았기 때문에 예시 상태로 두었습니다.
 
 ## Features
 

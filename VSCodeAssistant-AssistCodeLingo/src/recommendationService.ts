@@ -1,3 +1,5 @@
+//recommendationService.ts
+
 export function getRecommendations(): string[] {
     // 여기에서 추천 코드를 동적으로 생성하거나, 데이터베이스에서 불러오는 등의 로직을 작성합니다.
     return [
