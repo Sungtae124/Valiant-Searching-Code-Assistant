@@ -10,6 +10,9 @@
 <b><Assist! Code Lingo></b>는 작성 중인 파이썬 코드를 분석 및 요약하여 추천 코드를 제공하거나, 분석 내용을 인터넷에 검색하는 **VSCode Extension**입니다.
 
 
+![히히](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/2ac6115e-7f97-4dec-98f4-773c1038939e)
+
+
 ## Motivation
 
 최근에 가장 널리 사용되는 IDE를 꼽자면 단연 VSCode라고 할 수 있습니다. 
