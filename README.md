@@ -402,3 +402,6 @@ $SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
 ### 개발 예정 사항
 
 - 마켓플레이스 배포 예정
+
+### 추가 사항
+- Extension 메인 폴더 내에 generator 사용 시 기본으로 생성되는 ReadMe 파일이 있습니다. 현재 배포되지 않았기 때문에 예시 상태로 두었습니다.
