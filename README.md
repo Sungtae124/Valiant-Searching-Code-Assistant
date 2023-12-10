@@ -45,6 +45,23 @@ Extension을 통해서 수많은 프로그래밍 언어와 다양한 테마를 �
 <!-- - [기능 구현에 사용된 모델 성능 평가](#기능-구현에-사용된-모델-성능-평가)
 - [사용된 API](#사용된-api) -->
 
+### 설치
+- 완전한 Extension으로 개발이 완료된 것이 아니라서, 코드를 실행시키기 위해서 라이브러리와 패키지 설치가 필요합니다.
+- GPT-API 키가 빠져있는 코드이기 때문에 gpt_api.py에 키를 넣지 않으면 분석에 관련한 동작은 실행할 수 없습니다.
+
+- 1st) Node.js (npm) : https://nodejs.org/en
+- 2nd) Yeoman : https://yeoman.io/
+- 3rd) VS Code Extension Generator : https://www.npmjs.com/package/generator-code
+
+    ```tsx
+    npm install -g yo
+    npm install -g yo generator-code
+    
+    pip install numpy
+    pip install gensim
+    pip install openai
+    ```
+
 ## 사용법
 
 ### 구현 위치 별 설명
