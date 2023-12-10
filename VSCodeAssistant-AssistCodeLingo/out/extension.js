@@ -39,7 +39,8 @@ const buttonProvider_1 = require("./buttonProvider");
 // OutputChannel 선언
 let outputChannel;
 // 전역 변수 선언
-let currentAnalysisResult = ["Code Lingo", "option1", "option2"]; // 현재 분석 결과 중 1,2,3 순위를 string 배열로 저장해둠. & 기본 검색어를 위해 0번 인덱스에 "Code Lingo" 저장
+// 현재 분석 결과 중 1,2,3 순위를 string 배열로 저장해둠. & 기본 검색어를 위해 0번 인덱스에 "Code Lingo" 저장
+let currentAnalysisResult = ["Code Lingo", "option1", "option2"];
 let chosenOption = 0; // 선택된 분석 결과를 표시하기 위한 인덱스.
 let recommendedCode = "example recommendation";
 function activate(context) {
@@ -190,25 +191,16 @@ function activate(context) {
             interactionModel.addInteraction(interaction);
         }
     }
-    // 코드 추천을 위한 함수
-    let recommendCode = vscode.commands.registerCommand('CodeLingo.recommend', async () => {
-        // 사용자와의 상호작용을 InteractionModel에 추가
-        const interaction = new interaction_1.Interaction("Recommend usual code", 'recommendation');
-        interactionModel.addInteraction(interaction);
-        // 상호작용 모델을 통해 추천 코드를 가져오는 로직 또는 동적으로 생성하는 로직을 추가
-        const recommendations = recommendedCode;
-        //console.log(recommendations);
-        recommendationProvider.setRecommendations(recommendations);
-    });
-    // 도움 요청을 위한 함수
+    // 도움 요청을 위한 명령어. 코드 추천 기능 탑재
     let requestAssist = vscode.commands.registerCommand('CodeLingo.assist', () => {
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction1 = new interaction_1.Interaction("Assist! Code Lingo", 'callAssiatant');
         interactionModel.addInteraction(interaction1);
-        const interaction2 = new interaction_1.Interaction("What do you want to do?", 'askUser');
-        interactionModel.addInteraction(interaction2);
-        const interaction3 = new interaction_1.Interaction("You can choose actions by buttons!", 'buttonNotice');
-        interactionModel.addInteraction(interaction3);
+        const interaction = new interaction_1.Interaction("I will recommend usual code", 'recommendation');
+        interactionModel.addInteraction(interaction);
+        // 상호작용 모델을 통해 추천 코드를 가져오는 로직 또는 동적으로 생성하는 로직을 추가
+        const recommendations = recommendedCode;
+        recommendationProvider.setRecommendations(recommendations);
     });
     //인터넷 검색을 위한 기능 구현.
     let searchingInternet = vscode.commands.registerCommand('CodeLingo.searching', async () => {
@@ -242,7 +234,7 @@ function activate(context) {
             vscode.env.openExternal(vscode.Uri.parse(defaultSearchUrl));
         }
     });
-    context.subscriptions.push(askStart, askAnalyzedCode, requestAssist, searchingInternet, getFileContent, recommendCode);
+    context.subscriptions.push(askStart, askAnalyzedCode, requestAssist, searchingInternet, getFileContent);
     context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
         myButtonProvider.refresh();
     }));

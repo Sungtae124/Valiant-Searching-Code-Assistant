@@ -32,10 +32,6 @@
         "title": "Assist! Code Lingo"
       },
       {
-        "command": "CodeLingo.recommend",
-        "title": "Let me recommend"
-      },
-      {
         "command": "CodeLingo.getFileContent",
         "title": "get file content"
       },
