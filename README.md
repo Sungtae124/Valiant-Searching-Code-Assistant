@@ -27,8 +27,6 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 - 사용자 요청에 의한 코드 추천 및 자동 완성 Assistant
 - 분석된 코드에 대한 질문을 자동으로 포함하는 구글 검색 기능
 
-(기능별 움짤 4분할 정도 해서 첨부)
-
 해당 기능들은 모두 Sidebar에 위치한 버튼으로 실행시킬 수 있으며, 매우 긴밀하게 협력하여 당신의 코딩을 도와줍니다!
 
 ## 목차
@@ -84,9 +82,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
     ![Interactions](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/85b38398-a521-4a78-8460-60808a0ff734)
     
 
-(사진 첨부)
-
-### 3. Information Message(다시 작성 필요)(사진 첨부)
+### 3. Information Message(다시 작성 필요)
 
 - 사용자에게 직접 알려줘야 하는 정보에 대해서 별도로 Message를 띄워줍니다.
 
@@ -103,7 +99,6 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
     - 이 질문은 검색 기능의 기본 검색어로 저장됩니다.
     - 이 질문이 클립보드에 복사되어 바로 붙여넣기가 가능합니다.
 
-(사진 첨부)
 
 ### 5-1. QuickPick
 
@@ -113,8 +108,6 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
     - 분석된 코드로부터 생성된 질문 중에 사용자에게 선택 옵션을 제공합니다.
     - 코드 재분석 요청 옵션을 제공합니다.
 
-(사진 첨부)
-
 ### 5-2. Output Channel
 
 ![Output](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/d42c2607-4f07-44e7-a08e-105b868fbf34)
@@ -122,7 +115,6 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 - 코드가 분석된 후에 반환하는 결과 질문을 정확도 순서대로 3개까지 보여줍니다.
 - 사용자는 질문을 확인한 뒤 Notification과 QuickPick으로 응답이 가능합니다.
 
-(사진 첨부)
 
 ### 5-3. Quick Input
 
@@ -130,15 +122,14 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 - Search on Google 버튼 클릭시 입력값을 받습니다.
 
-(사진 첨부)
-
-(사진 첨부 시 중복된 정보는 제거하도록 노력.)
 
 ## 기능 구현 별 설명 (개발자들을 위한 설명)
 
 Button / Interaction (View) / Information message Notification, Quick Pick, Output Channel / Console / Command
 
 ### 1. 호출 및 실행
+
+![CodeLingo_gif](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/f9ad58e8-f65c-4667-8fc7-02707736a57a)
 
 - Button : Start Code Lingo
 - Command : CodeLingo.start
@@ -161,6 +152,8 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
 (사진 첨부)
 
 ### 3. 코드 분석
+
+![analysis_text_gif](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/8743524d-97e4-43b5-8c75-520f6bc9f3b5)
 
 - Button : Analyze Code
 - Command : CodeLingo.letsAnalyzeCode
@@ -192,6 +185,8 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
 
 ### 4. 분석 결과 확인
 
+![Notification_QuickPick](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/d006ba12-64dc-4a1c-889a-8b753d577af9)
+
 - Command : CodeLingo.askAnalyzedCode
 - Title : Do you writing this code?
 - 연결 함수 : copyToClipBoard
@@ -204,6 +199,8 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - 미응답 : 추후에 다시 분석을 진행하고 응답을 받도록 안내합니다.
         - “It's Okay. Let me assist you later!”
 - **QuickPick 활용**
+![PickSecondQuestion](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/9847dcb9-1754-41df-bb32-7de36144ee64)
+![PickThirdQuestion](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/7732e756-8f6c-4035-b44f-8b53a15520be)
     - No : 현재 질문이 부정확하다는 응답이므로, 생성된 질문 중 2,3 번째 질문을 QuickPick의 옵션으로 제공하여 사용자가 선택할 수 있도록 합니다.
         - "You chose No, let me show you options”
         - `You selected ${selectedOption}!`
@@ -211,6 +208,7 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - 옵션 중 ‘Request analysis’를 선택 시 코드 분석을 다시 요청합니다.
         - “Let me analyze your code again..”
         - **3. 코드 분석** 진행
+  ![RequestReanalyze](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/9dd57973-6b44-45f8-a994-265f94ca18f0)
     - 만약 QuickPick 창에서 그냥 나간다면..
         - “You did not select any option.”
 - 사용자가 선택한 질문의 인덱스를 chosenOption 변수에 저장합니다.
@@ -220,6 +218,8 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - 선택된 질문이 클립보드에 복사 되어 바로 붙여넣기가 가능합니다.
 
 ### 5. 검색 기능
+
+![searching_text_gif](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/400c4dc8-2626-4bd9-b580-0c68ade50264)
 
 - Button : Search on Google
 - Command : CodeLingo.searching
