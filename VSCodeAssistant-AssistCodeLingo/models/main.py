@@ -2,7 +2,7 @@
 
 from libs.tokenizer import tokenizer
 from libs.models import Word2Vec, FastText, get_result
-from libs.gpt_api import get_questions, get_response
+from libs.gpt_api import get_questions
 import sys
 import re
 
@@ -12,8 +12,6 @@ if __name__ == '__main__':
     source_code = ''
     for i in range(n):
         source_code += '\n' + sys.stdin.readline()
-
-    #print(n, source_code)
     
     
     token = tokenizer(source_code)
