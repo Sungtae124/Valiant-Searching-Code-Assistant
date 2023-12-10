@@ -125,7 +125,14 @@ Extension을 통해서 수많은 프로그래밍 언어와 다양한 테마를 �
 
 Button / Interaction (View) / Information message / Notification, Quick Pick, Output Channel / Console / Command
 
-$\color{#006600}Button$</p> $\color{#004088}Interaction (View)$</p> $\color{#40AEF0}Information\ message$</p> $\color{#7A1FA2}Notification, Quick Pick, Output Channel$</p> $\color{#FF9E0F}Console$</p> $\color{#3DDC84}Command$</p>
+<span style="background-color: #006600">Button</span>
+<span style="background-color: #004088">Interaction (View)</span>
+<span style="background-color: #40AEF0">Information message</span>
+<span style="background-color: #7A1FA2"> Notification, Quick Pick, Output Channel</span>
+<span style="background-color: #FF9E0F">Console</span>
+<span style="background-color: #3DDC84">Command</span>
+
+
 
 ### 1. 호출 및 실행
 
