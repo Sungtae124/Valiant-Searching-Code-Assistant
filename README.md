@@ -297,19 +297,24 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
 
 2. 추출된 단어들 중, **if, else, for, def** 와 같이 분석에 필요 없는 불용어는 모두 제외하여 토큰화를 수행합니다.
 
+토큰화 예시
+![tokenize image](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/101165696/9668af05-16a4-4d60-af6c-2198b18bc8fb)
+
+
 ### 2. Word Embedding Model Ensemble
 1. 비슷한 단어를 가까운 vector로 매핑하는 word embedding 모델을 사용하여 코드 내부 단어들에 대해 word embedding을 수행합니다.
 
 2. 모델의 embedding 결과의 신뢰성을 높이기 위해, 2개 이상의 모델을 사용했습니다. (Word2Vec, FastText)
 
 3. embedding 후, 각 단어들과 나머지 단어들의 cosine similarity를 구하고 모두 더합니다.<br>
-$C_i = \sum_{k=1}^n(similarity(i, k))$
+$C_i = \sum_{k=1}^{n}{similarity(i, k)}$
 
 4. 모든 단어들에 대해 $C$값을 구한 후, 정규화를 위해 softmax를 취합니다.<br>
-$SC_i = softmax(C_i)=\frac{exp(c_i)}{\sum_{j=1}^n{exp(c_j)}}$
+$SC_i = softmax(C_i)=\frac{exp(c_i)}{\sum_{j=1}^{n}{exp(c_j)}}$
 
 5. 각 모델의 $SC$ 값을 더하여 앙상블을 수행합니다.<br>
 $SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
+
 
 
 ### 3. GPT - API
