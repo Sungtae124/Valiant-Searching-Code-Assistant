@@ -1,9 +1,10 @@
 from openai import OpenAI
 
 KEY = ''
-client = OpenAI(api_key=KEY)
 
 def get_questions(words):
+
+    client = OpenAI(api_key=KEY)
 
     question = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -17,6 +18,8 @@ def get_questions(words):
 
 
 def get_response(question):
+
+    client = OpenAI(api_key=KEY)
     
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
