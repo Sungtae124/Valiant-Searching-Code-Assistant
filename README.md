@@ -7,7 +7,7 @@
 
 ## VS Code Assistant - Assist! Code Lingo
 
-<b><Assist! Code Lingo></b>는 작성 중인 파이썬 코드를 분석하여 사용자에게 함수 및 알고리즘 추천, 자동 코드 완성, 분석 내용 인터넷 검색 등의 기능을 제공하는 **VSCode Extension**입니다.
+<b><Assist! Code Lingo></b>는 작성 중인 파이썬 코드를 분석하여 사용자에게 키워드 기반 질문 및 추천 코드 제공, 분석 내용 인터넷 검색 등의 기능을 제공하는 **VSCode Extension**입니다.
 
 
 ## Motivation
