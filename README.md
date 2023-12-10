@@ -174,9 +174,7 @@ Button / Interaction (View) / Information message / Notification, Quick Pick, Ou
 - 별도의 Command 설정 없이 extension.ts 파일의 letsAnalyzeCode 명령어 내부에서 구현했습니다.
 - 연결 파일 : externalAnalysisIO.ts & analyze.py
 - 동작 : letsAnalyzeCode 명령어 내부에서 복사해온 코드 전체를 표준 입력을 이용해 string으로 코드 분석 파일인 main.py에 넘겨줍니다.
-    
     분석 진행 후 결과값을 string[]로 받아와서 Output Channel에서 보여줍니다.
-    
     - “Code analysis result: “
     - 결과 리턴 시 에러가 있을 경우 Information Message로 띄워줍니다.
 
@@ -214,6 +212,7 @@ Button / Interaction (View) / Information message / Notification, Quick Pick, Ou
 - 사용자가 버튼을 통해 선택한 응답에 따라 질문이 저장됩니다.
     - 선택된 질문은 검색 기능의 기본 검색어로 저장됩니다.
     - 선택된 질문이 클립보드에 복사 되어 바로 붙여넣을 수 있습니다.
+- 선택한 질문에 해당하는 추천 코드를 자동으로 생성하고, 추후에 사용자가 Assist! Code Lingo 버튼을 누르면 Output Channel에 보여줍니다.
 
 ### 5. 검색 기능
 
@@ -255,7 +254,7 @@ Button / Interaction (View) / Information message / Notification, Quick Pick, Ou
     - externalAnalysisIO.ts를 extension.ts가 포함된 src폴더 내부에 위치 시켰습니다.
     - codeAnalyzeMachine 폴더를 전체 Extension의 루트 폴더 하위에 위치 시켰습니다. (src 폴더와 동등한 루트 아래)
     - 상대 경로를 파악하여 externalAnalysisIO.ts 기준
-        - 상위 폴더 이동 → codeAnalyzeMachine 폴더로 이동 → [analyze.py](http://analyze.py) 접근
+        - 상위 폴더 이동 → models 폴더로 이동 → [main.py](http://main.py) 접근
         
         이러한 방식으로 접근하였습니다.
         
@@ -264,7 +263,7 @@ Button / Interaction (View) / Information message / Notification, Quick Pick, Ou
     // 현재 실행 중인 스크립트 파일의 디렉토리를 얻습니다.
     const scriptDir = path.dirname(__dirname);
     // 코드 분석 스크립트의 경로를 계산합니다.
-    const scriptPath = path.join(scriptDir, 'codeAnalyzeMachine', 'analyze.py');
+    const scriptPath = path.join(scriptDir, 'models', 'main.py');
     ```
     
 - 기존의 방식은 이렇게 되어있었습니다. 현재는 fileCopy.ts와 externalAnalysisIO.ts로 분리되었기 때문에 변경되었습니다. (파일이 열려있는 경로와 파일명을 조합하여 경로를 지정하는 방식)
@@ -349,6 +348,7 @@ $SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
 
     [https://platform.openai.com/docs/guides/text-generation](https://platform.openai.com/docs/guides/text-generation)
 
+
 ## 개발 진행 중 제한 사항
 
 ### Extension marketplace 배포
@@ -368,4 +368,8 @@ $SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
 
 ### 개발 진행 중인 사항
 
+- 함수 및 알고리즘 추천 기능
+
 ### 개발 예정 사항
+
+- 마켓플레이스 배포 예정
