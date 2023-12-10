@@ -27,17 +27,14 @@ export function activate(context: vscode.ExtensionContext) {
     // InteractionModel을 생성하는 코드 추가
     const interactionModel = new InteractionModel();
     vscode.window.createTreeView('interactions', { treeDataProvider: interactionModel });
-    // RecommendationProvider 생성
-    const recommendationProvider = new RecommendationProvider();
-    // testIconView를 생성하여 Primary Sidebar에 추가
-    const testIconView = vscode.window.createTreeView('testIconView', { treeDataProvider: recommendationProvider });
-    context.subscriptions.push(testIconView);
     // ButtonProvider 생성 및 testIconView에 추가
     const myButtonProvider = new ButtonProvider();
     const myButton = vscode.window.createTreeView('testIconView', { treeDataProvider: myButtonProvider });
     context.subscriptions.push(myButton);
     // OutputChannel 초기화
     outputChannel = vscode.window.createOutputChannel('CodeLingo Output');
+    // RecommendationProvider 생성 및 등록
+    const recommendationProvider = new RecommendationProvider(outputChannel);
 
     let askStart = vscode.commands.registerCommand('CodeLingo.start', () => {
         vscode.commands.executeCommand('workbench.view.extension.codelingoActivity');
@@ -143,6 +140,7 @@ export function activate(context: vscode.ExtensionContext) {
             
             // 여기에 Yes를 선택했을 때의 동작을 추가합니다. 함수 및 알고리즘 추천 구현 필요.
             copyToClipboard();      //clipboard에 currentAnalysisResult 복사.
+            
 
         } else if (answer === 'No') {
             // 사용자와의 상호작용을 InteractionModel에 추가
@@ -211,7 +209,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     // 코드 추천을 위한 함수
-    let recommendCode = vscode.commands.registerCommand('CodeLingo.recommend', () => {
+    let recommendCode = vscode.commands.registerCommand('CodeLingo.recommend', async() => {
         // 사용자와의 상호작용을 InteractionModel에 추가
         const interaction = new Interaction("Recommend usual code", 'recommendation');
         interactionModel.addInteraction(interaction);
@@ -220,8 +218,10 @@ export function activate(context: vscode.ExtensionContext) {
 
         // 상호작용 모델을 통해 추천 코드를 가져오는 로직 또는 동적으로 생성하는 로직을 추가
         const recommendations = getRecommendations(); // 예시: recommendationService.ts에서 추천 코드를 가져오는 로직을 추가
+        console.log(recommendations);
         recommendationProvider.setRecommendations(recommendations);
     });
+    
 
     // 도움 요청을 위한 함수
     let requestAssist = vscode.commands.registerCommand('CodeLingo.assist', () => {
@@ -270,7 +270,8 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(askStart, askAnalyzedCode, requestAssist, searchingInternet, recommendCode, getFileContent);
+    // recommendCode 임시로 제거.
+    context.subscriptions.push(askStart, askAnalyzedCode, requestAssist, searchingInternet, getFileContent, recommendCode);
 
     context.subscriptions.push(vscode.commands.registerCommand('CodeLingo.refreshMyTreeView', () => {
         myButtonProvider.refresh();
