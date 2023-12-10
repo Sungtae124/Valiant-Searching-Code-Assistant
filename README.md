@@ -1,14 +1,13 @@
-# ReadMe.md
+# Valiant-Searching Code Assistant
 
 ![CodeLingo Icon](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/535aedd1-7352-4920-9732-fb3b15652623)
 
 ---
 
-# Valiant-Searching Code Assistant
 
 ## VS Code Assistant - Assist! Code Lingo
 
-**<Assist! Code Lingo>**는 작성 중인 파이썬 코드를 분석하여 사용자에게 함수 및 알고리즘 추천, 자동 코드 완성, 분석 내용 인터넷 검색 등의 기능을 제공하는 **VSCode Extension**입니다.
+<b><Assist! Code Lingo></b>는 작성 중인 파이썬 코드를 분석하여 사용자에게 함수 및 알고리즘 추천, 자동 코드 완성, 분석 내용 인터넷 검색 등의 기능을 제공하는 **VSCode Extension**입니다.
 
 
 ## Motivation
@@ -32,16 +31,16 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 ## 목차
 
 - 설치
-- 사용법 - 구현 위치 별 설명
-- 기능 구현 별 설명
-- 기능 구현에 사용된 모델 성능 평가
-- 사용된 API
-- License
-- 참고자료
-- 개발 관련 사항
-    - 개발 진행 중인 사항
-    - 개발 예정 사항
-
+- [사용법 - 구현 위치 별 설명](#사용법)
+- [기능 구현 별 설명](#기능-구현-별-설명-개발자들을-위한-설명)
+- [분석 모델 설명](#분석-모델-설명)
+- [License](#license)
+- [참고자료](#참고자료)
+- [개발 관련 사항](#개발-관련-사항)
+    - [개발 진행 중인 사항](#개발-진행-중인-사항)
+    - [개발 예정 사항](#개발-예정-사항)
+<!-- - [기능 구현에 사용된 모델 성능 평가](#기능-구현에-사용된-모델-성능-평가)
+- [사용된 API](#사용된-api) -->
 
 ## 사용법
 
@@ -287,9 +286,36 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     ```
     
 
-## 기능 구현에 사용된 모델 성능 평가
+<!-- ## 기능 구현에 사용된 모델 성능 평가
 
-## 사용된 API
+## 사용된 API -->
+
+## 분석 모델 설명
+
+### 1. Tokenizer
+1. 파이썬 기본 라이브러리 **tokenize**를 사용하여 연산자, 구분자를 제외한 변수명, 함수명, 클래스명 등을 추출합니다.
+
+2. 추출된 단어들 중, **if, else, for, def** 와 같이 분석에 필요 없는 불용어는 모두 제외하여 토큰화를 수행합니다.
+
+### 2. Word Embedding Model Ensemble
+1. 비슷한 단어를 가까운 vector로 매핑하는 word embedding 모델을 사용하여 코드 내부 단어들에 대해 word embedding을 수행합니다.
+
+2. 모델의 embedding 결과의 신뢰성을 높이기 위해, 2개 이상의 모델을 사용했습니다. (Word2Vec, FastText)
+
+3. embedding 후, 각 단어들과 나머지 단어들의 cosine similarity를 구하고 모두 더합니다.<br>
+$C_i = \sum_{k=1}^n(similarity(i, k))$
+
+4. 모든 단어들에 대해 $C$값을 구한 후, 정규화를 위해 softmax를 취합니다.<br>
+$SC_i = softmax(C_i)=\frac{exp(c_i)}{\sum_{j=1}^n{exp(c_j)}}$
+
+5. 각 모델의 $SC$ 값을 더하여 앙상블을 수행합니다.<br>
+$SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
+
+
+### 3. GPT - API
+1. 위에서 구한 $SC^{ensemble}$ 값 크기 순서대로 상위 10개 단어만 추출하였고, 이를 **질문 생성 역할을 부여한 GPT**에게 하나의 질문 형식의 문장으로 생성하여 사용자에게 보여줍니다.
+
+2. 사용자로부터 승인된 질문이 들어오면, 해당 질문을 **파이썬 튜터 역할을 부여한 GPT**에게 전달하여 자세한 설명을 하도록 합니다.
 
 ## License
 
@@ -312,6 +338,22 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     
 - 개발 자체에 직접적인 참고는 아니지만 TypeScript 이해를 위해 참고한 강의들입니다.
     - 코딩앙마 님의 JavaScript 초, 중급 & TypeScript 강의 [(Youtube)](https://www.youtube.com/playlist?list=PLZKTXPmaJk8KhKQ_BILr1JKCJbR0EGlx0)
+    
+
+### 모델 개발 파트
+
+- Word2Vec
+    
+    [Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/pdf/1301.3781.pdf)
+
+- FastText
+
+    [Enriching Word Vectors with Subword Information](https://arxiv.org/pdf/1607.04606.pdf)
+
+
+- GPT-API 공식 문서
+
+    [https://platform.openai.com/docs/guides/text-generation](https://platform.openai.com/docs/guides/text-generation)
 
 ## 개발 관련 사항
 
