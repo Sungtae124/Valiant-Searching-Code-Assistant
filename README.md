@@ -123,7 +123,7 @@ Extension을 통해서 수많은 프로그래밍 언어와 다양한 테마를 �
 
 ## 기능 구현 별 설명 (개발자들을 위한 설명)
 
-==Button== / ==Interaction (View)== / Information message / Notification, Quick Pick, Output Channel / Console / Command
+<span style="color:red">span Button </span> / <span style="color:orange">span Interaction (View) </span> / <span style="color:yellow">span Information message </span> / <span style="color:green">span Notification, Quick Pick, Output Channel </span>  / <span style="color:blue">span Console </span>  / <span style="color:purple">span Command </span>
 
 ### 1. 호출 및 실행
 
