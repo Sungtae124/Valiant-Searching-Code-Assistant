@@ -62,7 +62,7 @@ Extension을 통해서 수많은 프로그래밍 언어와 다양한 테마를 �
 
 - **Buttons**
     
-    ![Buttons](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/6bb06cff-0039-46db-825b-0b366e79c018)
+    ![Buttons](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/5924749c-0f88-456f-b93d-dd3012b1a327)
     
     - 사용자는 버튼을 통해서 사전 등록된 명령어와 연결된 각 기능을 실행할 수 있으며, 이는 유기적으로 동작합니다. 자세한 설명은 기능 구현 별 설명에 첨부하였습니다.
     - Start Code Lingo : Code Lingo가 호출되고 인사해줍니다.
@@ -123,12 +123,7 @@ Extension을 통해서 수많은 프로그래밍 언어와 다양한 테마를 �
 
 ## 기능 구현 별 설명 (개발자들을 위한 설명)
 
-<span style="color:red"> Button</span>
-<span style="color:orange">Interaction (View)</span>
-<span style="color:yellow">Information message</span>
-<span style="color:green">Notification, Quick Pick, Output Channel</span>
-<span style="color:blue">Console</span>
-<span style="color:purple">Command</span>
+Button / Interaction (View) / Information message / Notification, Quick Pick, Output Channel / Console / Command
 
 ### 1. 호출 및 실행
 
@@ -232,7 +227,9 @@ Extension을 통해서 수많은 프로그래밍 언어와 다양한 테마를 �
     - “"I enter selected option as query.”
 - 구글 검색을 실행 후 검색 결과를 기본 브라우저의 새 창으로 열어줍니다.
 
-### 7. Assist! 기능(코드 추천 기능)
+### 6. Assist! 기능(코드 추천 기능)
+
+![recommendation_gif](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/ca656399-0924-48aa-90bc-51694e9026e7)
 
 - Button : Assist! Code Lingo
 - Command : CodeLingo.assist
@@ -240,7 +237,7 @@ Extension을 통해서 수많은 프로그래밍 언어와 다양한 테마를 �
 - 동작 : "Assist! Code Lingo”, "Recommend usual code”
 - 사용자에게 선택된 질문 기반으로 생성된 추천 코드를 보여줍니다.(Output Channel 활용)
 
-### (2번, 3번 내용에 대한 추가 코멘트)
+### 7. (2번, 3번 내용에 대한 추가 코멘트)
 
 - 파일 경로 설정에 대한 숱한 고민 끝에 현재 코드에 사용된 방식을 유지하기로 결정하였습니다.
 - 외부 파일을 여는 상황(getFileContent 명령어와 fileCopy.ts)에서는 VSCode 에디터 내에 열려있는 폴더와 스크립트의 경로를 기준으로 하여 탐색합니다.
