@@ -7,30 +7,33 @@
 
 ## VS Code Assistant - Assist! Code Lingo
 
-<b><Assist! Code Lingo></b>는 작성 중인 파이썬 코드를 분석하여 사용자에게 함수 및 알고리즘 추천, 자동 코드 완성, 분석 내용 인터넷 검색 등의 기능을 제공하는 **VSCode Extension**입니다.
+<b><Assist! Code Lingo></b>는 작성 중인 파이썬 코드를 분석 및 요약하여 추천 코드를 제공하거나, 분석 내용을 인터넷에 검색하는 **VSCode Extension**입니다.
+
+
+![히히](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/2ac6115e-7f97-4dec-98f4-773c1038939e)
 
 
 ## Motivation
 
-최근에 가장 범용적으로 사용되는 IDE를 꼽자면 단연 VSCode일 것입니다. 
+최근에 가장 널리 사용되는 IDE를 꼽자면 단연 VSCode라고 할 수 있습니다. 
 
-Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁게 하는 테마들, 당신의 코드를 완성시켜줄 기능을 더해준다는 점이 그 이유일 것입니다. 
+Extension을 통해서 수많은 프로그래밍 언어와 다양한 테마를 제공할뿐만 아니라, 코드 완성에 박차를 가하는 탁월한 기능 덕분일 것입니다. 
 
 우리는 여기서 Idea를 얻었습니다. 
 
-어떤 기능을 하더라도 Extension의 형태로 한 번 만들어보자..!
+'어떤 기능을 하더라도 Extension의 형태로 한 번 만들어보자!' 라고 말이죠.
 
-그렇게 시작한 이 프로젝트는 Valiant-Searching(VS) 이라는 키워드에 맞게 훌륭한 탐색을 통해 사용자의 코드를 분석하고 다음과 같은 기능을 갖추게 되었습니다.
+그렇게 시작한 이 프로젝트는 Valiant-Searching(VS) 이라는 키워드에 맞게 사용자의 코드를 분석하고 다음과 같은 기능을 갖추게 되었습니다.
 
-- 코드 분석을 통한 함수 및 알고리즘 추천
-- 사용자 요청에 의한 코드 추천 및 자동 완성 Assistant
+- 코드 분석을 통한 세 가지 요약 질문 제공
+- 사용자 요청에 의한 코드 추천 Assistant
 - 분석된 코드에 대한 질문을 자동으로 포함하는 구글 검색 기능
 
-해당 기능들은 모두 Sidebar에 위치한 버튼으로 실행시킬 수 있으며, 매우 긴밀하게 협력하여 당신의 코딩을 도와줍니다!
+해당 기능은 모두 Sidebar에 위치한 버튼으로 실행할 수 있으며, 매우 긴밀하게 협력하여 당신의 코딩을 도와줄 것입니다!
 
 ## 목차
 
-- 설치
+<!-- - 설치 -->
 - [사용법 - 구현 위치 별 설명](#사용법)
 - [기능 구현 별 설명](#기능-구현-별-설명-개발자들을-위한-설명)
 - [분석 모델 설명](#분석-모델-설명)
@@ -42,19 +45,36 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 <!-- - [기능 구현에 사용된 모델 성능 평가](#기능-구현에-사용된-모델-성능-평가)
 - [사용된 API](#사용된-api) -->
 
+### 설치
+- 완전한 Extension으로 개발이 완료된 것이 아니라서, 코드를 실행시키기 위해서 라이브러리와 패키지 설치가 필요합니다.
+- GPT-API 키가 빠져있는 코드이기 때문에 gpt_api.py에 키를 넣지 않으면 분석에 관련한 동작은 실행할 수 없습니다.
+
+- 1st) Node.js (npm) : https://nodejs.org/en
+- 2nd) Yeoman : https://yeoman.io/
+- 3rd) VS Code Extension Generator : https://www.npmjs.com/package/generator-code
+
+    ```tsx
+    npm install -g yo
+    npm install -g yo generator-code
+    
+    pip install numpy
+    pip install gensim
+    pip install openai
+    ```
+
 ## 사용법
 
 ### 구현 위치 별 설명
 
-기존에 VSCode와 Extension을 설치하여 사용해보신 분들은 직관적으로 바로 사용하실 수 있습니다.
+기존에 VSCode와 Extension을 사용해보신 분들은 큰 어려움 없이 사용하실 수 있습니다.
 
-처음 사용하시는 분들도 추가적인 설명 없이 쓸 수 있도록 설계했지만, 혹시 궁금한 점이 있다면 아래의 설명을 참고해주세요!
+처음 사용하시는 분도 추가적인 설명 없이 쓸 수 있도록 설계했지만, 혹시 궁금한 점이 있다면 아래의 설명을 참고해주세요!
 
 <img width="1681" alt="architecture-containers" src="https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/352218ed-40d2-4489-9ae4-942d72695e15">
 
 (from. [https://code.visualstudio.com/api/ux-guidelines/overview](https://code.visualstudio.com/api/ux-guidelines/overview))
 
-### 1. Activity Bar → Code Lingo’s Icon
+### 1. Activity Bar - Code Lingo’s Icon
 
 - Icon을 클릭하면 Code Lingo와 상호작용 할 수 있는 View가 Primary Sidebar에서 열립니다.
 
@@ -62,15 +82,14 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 - **Buttons**
     
-    ![Buttons](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/6bb06cff-0039-46db-825b-0b366e79c018)
+    ![Buttons](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/5924749c-0f88-456f-b93d-dd3012b1a327)
     
-    - 사용자는 버튼을 통해서 사전 등록된 명령어와 연결된 각 기능을 실행시킬 수 있으며, 이 명령어들은 유기적으로 동작합니다. 자세한 설명은 기능 구현 별 설명에 첨부하였습니다.
+    - 사용자는 버튼을 통해서 사전 등록된 명령어와 연결된 각 기능을 실행할 수 있으며, 이는 유기적으로 동작합니다. 자세한 설명은 기능 구현 별 설명에 첨부하였습니다.
     - Start Code Lingo : Code Lingo가 호출되고 인사해줍니다.
     - Analyze Code : 코드를 분석한 뒤 키워드를 기반으로 질문 형태로 나타내 줍니다.
-    - Assist! Code Lingo : 기능을 다시 알려주고 코드 자동 완성 기능을 제공합니다.
-    - Request Recommendation : 분석된 코드를 기반으로 추천 코드를 보여줍니다.
+    - Assist! Code Lingo : 사용자가 선택한 질문을 기반으로 추천 코드를 생성하고 보여줍니다.
     - Search on Google :
-        - 분석된 코드 기반으로 생성된 질문을 기본 검색어로 받아와 검색합니다. (Enter키 한번)
+        - Analyze Code에서 제기된 질문을 기본 검색어로 받아와 검색합니다. (Enter키 한번)
         - 검색어를 직접 입력 받아 검색할 수 있습니다.
         - 기본 브라우저의 새 창으로 띄워줍니다.
 - **Interaction View**
@@ -81,9 +100,9 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
     ![Interactions](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/85b38398-a521-4a78-8460-60808a0ff734)
     
 
-### 3. Information Message(다시 작성 필요)
+### 3. Information Message
 
-- 사용자에게 직접 알려줘야 하는 정보에 대해서 별도로 Message를 띄워줍니다.
+- 사용자에게 직접 알려줘야 하는 정보에 대해서 별도로 Message를 띄워줍니다. (우측 하단)
 
 ![Notification   Information](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/a2020950-155f-4188-bd31-093de1e0882d)
 
@@ -104,14 +123,14 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 ![QuickPick](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/5e8038dd-a522-4c84-9d8d-8ba543c1f899)
 
 - 3가지 옵션을 제공하여 사용자가 선택하면 해당하는 동작을 수행합니다.
-    - 분석된 코드로부터 생성된 질문 중에 사용자에게 선택 옵션을 제공합니다.
+    - 분석한 코드로부터 생성된 질문 중에 사용자에게 선택 옵션을 제공합니다.
     - 코드 재분석 요청 옵션을 제공합니다.
 
 ### 5-2. Output Channel
 
 ![Output](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/d42c2607-4f07-44e7-a08e-105b868fbf34)
 
-- 코드가 분석된 후에 반환하는 결과 질문을 정확도 순서대로 3개까지 보여줍니다.
+- 코드 분석 후에 도출된 결과 질문을 정확도 순서대로 3개까지 보여줍니다.
 - 사용자는 질문을 확인한 뒤 Notification과 QuickPick으로 응답이 가능합니다.
 
 
@@ -124,7 +143,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 ## 기능 구현 별 설명 (개발자들을 위한 설명)
 
-Button / Interaction (View) / Information message Notification, Quick Pick, Output Channel / Console / Command
+Button / Interaction (View) / Information message / Notification, Quick Pick, Output Channel / Console / Command
 
 ### 1. 호출 및 실행
 
@@ -146,9 +165,8 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - console.log로 VSCode에 열려있는 스크립트 내용이 성공적으로 복사되었는지 확인이 가능합니다. “파일 내용을 가져왔습니다. “
     - fileCopy.ts 측에서 스크립트 복사 시에 에러가 있다면 콘솔로 알려줍니다.
         - “파일을 읽는 도중 오류가 발생했습니다.”
-- fileContent가 정상적으로 불러와지지 않았다면 : “파일 내용을 가져올 수 없습니다.” 출력.
+- fileContent를 정상적으로 불러오지 못했다면 : “파일 내용을 가져올 수 없습니다.” 출력.
 
-(사진 첨부)
 
 ### 3. 코드 분석
 
@@ -167,20 +185,16 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
         - `Code analysis failed with exit code ${result.status}.`
         - reject(`Code analysis failed with exit code ${result.status}.`)
 
-(사진 첨부)
 
 ### 3-1. 외부 코드 입출력
 
-- 별도의 Command 설정 없이 extension.ts 파일의 letsAnalyzeCode 명령어 내부에서 구현되었습니다.
+- 별도의 Command 설정 없이 extension.ts 파일의 letsAnalyzeCode 명령어 내부에서 구현했습니다.
 - 연결 파일 : externalAnalysisIO.ts & analyze.py
-- 동작 : letsAnalyzeCode 명령어 내부에서 코드 분석 파일인 analyze.py에게 복사해온 코드 전체를 표준 입력을 이용해 string으로 넘겨줍니다.
-    
+- 동작 : letsAnalyzeCode 명령어 내부에서 복사해온 코드 전체를 표준 입력을 이용해 string으로 코드 분석 파일인 main.py에 넘겨줍니다.
     분석 진행 후 결과값을 string[]로 받아와서 Output Channel에서 보여줍니다.
-    
     - “Code analysis result: “
     - 결과 리턴 시 에러가 있을 경우 Information Message로 띄워줍니다.
 
-(사진 첨부)
 
 ### 4. 분석 결과 확인
 
@@ -192,7 +206,7 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
 - 동작 : 분석한 코드로부터 도출된 질문이 맞는지 사용자에게 확인합니다.
 - “Are you writing this type of code?”
 - **Notification 활용**
-    - Yes : 현재 질문이 적절하다는 응답으로, 이 질문을 기반으로 관련 함수나 알고리즘을 추천해 드립니다.
+    - Yes : 현재 질문이 적절하다는 응답으로, 이 질문을 기반으로 기본 검색어와 추천 코드를 제공합니다.
         - “Great! Let me assist you.”
         - “I will recommend functions and algorithms.”
     - 미응답 : 추후에 다시 분석을 진행하고 응답을 받도록 안내합니다.
@@ -204,7 +218,7 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
         - "You chose No, let me show you options”
         - `You selected ${selectedOption}!`
         - “I will recommend functions and algorithms.”
-    - 옵션 중 ‘Request analysis’를 선택 시 코드 분석을 다시 요청합니다.
+    - 옵션 중 ‘Request code analyze again!’을 선택 시 코드 분석을 다시 요청합니다.
         - “Let me analyze your code again..”
         - **3. 코드 분석** 진행
   ![RequestReanalyze](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/9dd57973-6b44-45f8-a994-265f94ca18f0)
@@ -214,7 +228,9 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - Yes(1번 질문) ⇒ **0** / No ⇒ option 1(2번 질문) : **1** / option 2(3번질문) : **2** / re-analyze(분석 재요청) : **-1**
 - 사용자가 버튼을 통해 선택한 응답에 따라 질문이 저장됩니다.
     - 선택된 질문은 검색 기능의 기본 검색어로 저장됩니다.
-    - 선택된 질문이 클립보드에 복사 되어 바로 붙여넣기가 가능합니다.
+    - 선택된 질문이 클립보드에 복사 되어 바로 붙여넣을 수 있습니다.
+- 선택한 질문에 해당하는 추천 코드를 자동으로 생성합니다. (recommendedCode로 추천 코드를 받아옴)
+- 추후에 사용자가 Assist! Code Lingo 버튼을 누르면 Output Channel에 보여줍니다.
 
 ### 5. 검색 기능
 
@@ -231,28 +247,19 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - “"I enter selected option as query.”
 - 구글 검색을 실행 후 검색 결과를 기본 브라우저의 새 창으로 열어줍니다.
 
-### (구현 필요)
+### 6. Assist! 기능(코드 추천 기능)
 
-### 6. 코드 추천 기능
-
-- Button : Request recommendation
-- Command : CodeLingo.recommend
-- Title : Let me recommend
-- 동작 : 사용자에게 추천 코드를 보여줍니다. + "Recommend usual code”
-- (“Now I will serve you recommend CODE!”라고 임시로..**→추천 코드는 어떻게 보여줄 것인가?**)
-
-### 7. Assist! 기능
+![recommendation_gif](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/ca656399-0924-48aa-90bc-51694e9026e7)
 
 - Button : Assist! Code Lingo
 - Command : CodeLingo.assist
 - Title : Assist! Code Lingo
-- 동작 : 우선 사용자에게 버튼으로 동작할 수 있는 기능들을 알려줍니다.
-- "Assist! Code Lingo”, "What do you want to do?”, "You can choose actions by buttons!”
-- (이후 코드 자동 완성 기능을 구현 시 연결 예정)
+- 동작 : "Assist! Code Lingo”, "Recommend usual code”
+- 사용자에게 선택된 질문 기반으로 생성된 추천 코드를 보여줍니다.(Output Channel 활용)
 
-### (2번, 3번 내용에 대한 추가 코멘트)
+### 7. (2번, 3번 내용에 대한 추가 코멘트)
 
-- 파일 경로 설정에 대해 많은 고민 끝에 현재의 코드에 사용된 방식으로 고정하였습니다.
+- 파일 경로 설정에 대한 숱한 고민 끝에 현재 코드에 사용된 방식을 유지하기로 결정하였습니다.
 - 외부 파일을 여는 상황(getFileContent 명령어와 fileCopy.ts)에서는 VSCode 에디터 내에 열려있는 폴더와 스크립트의 경로를 기준으로 하여 탐색합니다.
     
     ```tsx
@@ -265,7 +272,7 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - externalAnalysisIO.ts를 extension.ts가 포함된 src폴더 내부에 위치 시켰습니다.
     - codeAnalyzeMachine 폴더를 전체 Extension의 루트 폴더 하위에 위치 시켰습니다. (src 폴더와 동등한 루트 아래)
     - 상대 경로를 파악하여 externalAnalysisIO.ts 기준
-        - 상위 폴더 이동 → codeAnalyzeMachine 폴더로 이동 → [analyze.py](http://analyze.py) 접근
+        - 상위 폴더 이동 → models 폴더로 이동 → [main.py](http://main.py) 접근
         
         이러한 방식으로 접근하였습니다.
         
@@ -274,7 +281,7 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     // 현재 실행 중인 스크립트 파일의 디렉토리를 얻습니다.
     const scriptDir = path.dirname(__dirname);
     // 코드 분석 스크립트의 경로를 계산합니다.
-    const scriptPath = path.join(scriptDir, 'codeAnalyzeMachine', 'analyze.py');
+    const scriptPath = path.join(scriptDir, 'models', 'main.py');
     ```
     
 - 기존의 방식은 이렇게 되어있었습니다. 현재는 fileCopy.ts와 externalAnalysisIO.ts로 분리되었기 때문에 변경되었습니다. (파일이 열려있는 경로와 파일명을 조합하여 경로를 지정하는 방식)
@@ -322,12 +329,16 @@ $SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
 
 2. 사용자로부터 승인된 질문이 들어오면, 해당 질문을 **파이썬 튜터 역할을 부여한 GPT**에게 전달하여 자세한 설명을 하도록 합니다.
 
+
+### 전체 흐름도
+![flow chart image](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/101165696/c3855e9e-7e29-415a-acb4-2c7e5e2d2816)
+
+
 ## License
 
 - 기본적으로 MIT License를 따릅니다.
 - 저희는 이 코드가 최대한 널리 퍼지고, 수정되는 것을 목적으로 개발을 시작하였기 때문에 얼마든지 활용하셔도 좋습니다. 출처만 남겨주세요!
-- 이 코드를 직접 수정해주실 의향이 있다면 메일로 연락 주시면 감사하겠습니다.
-- 기타 여러가지 조언이나 말씀은 자유롭게 연락 주시면 그 또한 적극적으로 검토하겠습니다.
+- 이 코드를 직접 수정하실 의향이 있다면 메일로 연락 주시면 감사하겠습니다.
 
 ## 참고자료
 
@@ -341,8 +352,8 @@ $SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
     
     [https://github.com/pg-vscode-extn-kr/pg-vscode-extn-kr.github.io/tree/master](https://github.com/pg-vscode-extn-kr/pg-vscode-extn-kr.github.io/tree/master)
     
-- 개발 자체에 직접적인 참고는 아니지만 TypeScript 이해를 위해 참고한 강의들입니다.
-    - 코딩앙마 님의 JavaScript 초, 중급 & TypeScript 강의 [(Youtube)](https://www.youtube.com/playlist?list=PLZKTXPmaJk8KhKQ_BILr1JKCJbR0EGlx0)
+- 개발 자체에 직접적인 참고는 아니지만 TypeScript 이해를 위해 참고한 강의입니다.
+    - 코딩앙마님의 JavaScript 초, 중급 & TypeScript 강의 [(Youtube)](https://www.youtube.com/playlist?list=PLZKTXPmaJk8KhKQ_BILr1JKCJbR0EGlx0)
     
 
 ### 모델 개발 파트
@@ -360,8 +371,34 @@ $SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
 
     [https://platform.openai.com/docs/guides/text-generation](https://platform.openai.com/docs/guides/text-generation)
 
+
+## 개발 진행 중 제한 사항
+
+### Extension marketplace 배포
+
+- 프로젝트 시작 시에는 pip install이나 기존의 Extension과 같이 사용자가 직접 설치하여 사용할 수 있는 수준까지 만드는 것이 목표였습니다.
+- 그 목표를 이루기 위해서는 배포 및 마켓플레이스 등록이 필수적이지만, 아래 적어둔 GPT-API 키 관련 문제로 실행시키지 못했습니다.
+- 추후에 지속적인 개발 예정이므로, 언젠가는 마켓플레이스와 VSCode 내의 Extensions 탭에서 꼭 뵐 수 있도록 노력하겠습니다.
+
+### GPT-API 사용 관련
+
+- GPT-API를 사용하기 위해서는 고유 키가 필요합니다.
+- 오픈소스의 목적에 맞게 키를 그대로 넣어두고 Extension 배포 후 자유롭게 사용할 수 있도록 하고 싶었지만..
+- 인터넷과 깃허브 등의 공개 서버에 키를 올리는 순간 open-ai 측에서 키를 없애버리는 상황이라 불가피하게 키만 삭제하여 업로드하였습니다.
+
+### Web View 사용 관련
+
+- Recommendation Code 파트에서 생성된 추천 코드를 별도의 탭인 Web View에 표시하는 것이 원래 계획이었습니다.
+- 그러나 Web View에 표시할 때 지나치게 오류가 많아지고, 프로그램 구동 자체가 느려져 오히려 완성도를 해친다고 생각하여 제외시켰습니다.
+- 현재는 Output Channel로 대체하여 표시하도록 했습니다.
+
+
 ## 개발 관련 사항
 
 ### 개발 진행 중인 사항
 
+- 함수 및 알고리즘 추천 기능
+
 ### 개발 예정 사항
+
+- 마켓플레이스 배포 예정
