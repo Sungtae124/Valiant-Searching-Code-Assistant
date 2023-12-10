@@ -1,6 +1,6 @@
 # ReadMe.md
 
-![IMG_0152.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/IMG_0152.png)
+![CodeLingo Icon](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/535aedd1-7352-4920-9732-fb3b15652623)
 
 ---
 
@@ -53,7 +53,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 처음 사용하시는 분들도 추가적인 설명 없이 쓸 수 있도록 설계했지만, 혹시 궁금한 점이 있다면 아래의 설명을 참고해주세요!
 
-![architecture-containers.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/architecture-containers.png)
+<img width="1681" alt="architecture-containers" src="https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/352218ed-40d2-4489-9ae4-942d72695e15">
 
 (from. [https://code.visualstudio.com/api/ux-guidelines/overview](https://code.visualstudio.com/api/ux-guidelines/overview))
 
@@ -65,7 +65,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 - **Buttons**
     
-    ![Buttons.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/Buttons.png)
+    ![Buttons](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/6bb06cff-0039-46db-825b-0b366e79c018)
     
     - 사용자는 버튼을 통해서 사전 등록된 명령어와 연결된 각 기능을 실행시킬 수 있으며, 이 명령어들은 유기적으로 동작합니다. 자세한 설명은 기능 구현 별 설명에 첨부하였습니다.
     - Start Code Lingo : Code Lingo가 호출되고 인사해줍니다.
@@ -81,7 +81,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
     - 각 command가 실행되며 사용자에게 진행 상황과 관련 정보를 보여줍니다.
 - 어떤 명령어가 실행되었는지 보여줌으로써 Extension이 정상적으로 동작하는지 확인할 수 있습니다.
     
-    ![Interactions.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/Interactions.png)
+    ![Interactions](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/85b38398-a521-4a78-8460-60808a0ff734)
     
 
 (사진 첨부)
@@ -90,7 +90,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 - 사용자에게 직접 알려줘야 하는 정보에 대해서 별도로 Message를 띄워줍니다.
 
-![Notification & Information.png](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/Notification__Information.png)
+![Notification   Information](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/a2020950-155f-4188-bd31-093de1e0882d)
 
 ### 4. Notifications
 
@@ -107,7 +107,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 ### 5-1. QuickPick
 
-![QuickPick.jpg](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/QuickPick.jpg)
+![QuickPick](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/5e8038dd-a522-4c84-9d8d-8ba543c1f899)
 
 - 3가지 옵션을 제공하여 사용자가 선택하면 해당하는 동작을 수행합니다.
     - 분석된 코드로부터 생성된 질문 중에 사용자에게 선택 옵션을 제공합니다.
@@ -117,7 +117,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 ### 5-2. Output Channel
 
-![Output.jpg](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/Output.jpg)
+![Output](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/d42c2607-4f07-44e7-a08e-105b868fbf34)
 
 - 코드가 분석된 후에 반환하는 결과 질문을 정확도 순서대로 3개까지 보여줍니다.
 - 사용자는 질문을 확인한 뒤 Notification과 QuickPick으로 응답이 가능합니다.
@@ -126,7 +126,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
 
 ### 5-3. Quick Input
 
-![QuickInput.jpg](ReadMe%20md%20c4976df2b1bb4eac9068d4f502be0cf5/QuickInput.jpg)
+![QuickInput](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/531ec548-037f-4fe1-b97e-29c901997ed7)
 
 - Search on Google 버튼 클릭시 입력값을 받습니다.
 
