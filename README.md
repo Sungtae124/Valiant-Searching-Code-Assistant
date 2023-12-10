@@ -201,7 +201,7 @@ Button / Interaction (View) / Information message / Notification, Quick Pick, Ou
         - "You chose No, let me show you options”
         - `You selected ${selectedOption}!`
         - “I will recommend functions and algorithms.”
-    - 옵션 중 ‘Request analysis’를 선택 시 코드 분석을 다시 요청합니다.
+    - 옵션 중 ‘Request code analyze again!’을 선택 시 코드 분석을 다시 요청합니다.
         - “Let me analyze your code again..”
         - **3. 코드 분석** 진행
   ![RequestReanalyze](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/9dd57973-6b44-45f8-a994-265f94ca18f0)
@@ -212,7 +212,8 @@ Button / Interaction (View) / Information message / Notification, Quick Pick, Ou
 - 사용자가 버튼을 통해 선택한 응답에 따라 질문이 저장됩니다.
     - 선택된 질문은 검색 기능의 기본 검색어로 저장됩니다.
     - 선택된 질문이 클립보드에 복사 되어 바로 붙여넣을 수 있습니다.
-- 선택한 질문에 해당하는 추천 코드를 자동으로 생성하고, 추후에 사용자가 Assist! Code Lingo 버튼을 누르면 Output Channel에 보여줍니다.
+- 선택한 질문에 해당하는 추천 코드를 자동으로 생성합니다. (recommendedCode로 추천 코드를 받아옴)
+- 추후에 사용자가 Assist! Code Lingo 버튼을 누르면 Output Channel에 보여줍니다.
 
 ### 5. 검색 기능
 
@@ -367,6 +368,12 @@ $SC^{ensemble} = SC^{Word2Vec} + SC^{FastText}$
 - GPT-API를 사용하기 위해서는 고유 키가 필요합니다.
 - 오픈소스의 목적에 맞게 키를 그대로 넣어두고 Extension 배포 후 자유롭게 사용할 수 있도록 하고 싶었지만..
 - 인터넷과 깃허브 등의 공개 서버에 키를 올리는 순간 open-ai 측에서 키를 없애버리는 상황이라 불가피하게 키만 삭제하여 업로드하였습니다.
+
+### Web View 사용 관련
+
+- Recommendation Code 파트에서 생성된 추천 코드를 별도의 탭인 Web View에 표시하는 것이 원래 계획이었습니다.
+- 그러나 Web View에 표시할 때 지나치게 오류가 많아지고, 프로그램 구동 자체가 느려져 오히려 완성도를 해친다고 생각하여 제외시켰습니다.
+- 현재는 Output Channel로 대체하여 표시하도록 했습니다.
 
 
 ## 개발 관련 사항
