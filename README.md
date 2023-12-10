@@ -81,7 +81,7 @@ Extension을 통해서 수많은 프로그래밍 언어 지원, 코딩을 즐겁
     ![Interactions](https://github.com/Sungtae124/Valiant-Searching-Code-Assistant/assets/128397778/85b38398-a521-4a78-8460-60808a0ff734)
     
 
-### 3. Information Message(다시 작성 필요)
+### 3. Information Message
 
 - 사용자에게 직접 알려줘야 하는 정보에 대해서 별도로 Message를 띄워줍니다.
 
@@ -148,7 +148,6 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
         - “파일을 읽는 도중 오류가 발생했습니다.”
 - fileContent가 정상적으로 불러와지지 않았다면 : “파일 내용을 가져올 수 없습니다.” 출력.
 
-(사진 첨부)
 
 ### 3. 코드 분석
 
@@ -167,7 +166,6 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
         - `Code analysis failed with exit code ${result.status}.`
         - reject(`Code analysis failed with exit code ${result.status}.`)
 
-(사진 첨부)
 
 ### 3-1. 외부 코드 입출력
 
@@ -180,7 +178,6 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - “Code analysis result: “
     - 결과 리턴 시 에러가 있을 경우 Information Message로 띄워줍니다.
 
-(사진 첨부)
 
 ### 4. 분석 결과 확인
 
@@ -192,7 +189,7 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
 - 동작 : 분석한 코드로부터 도출된 질문이 맞는지 사용자에게 확인합니다.
 - “Are you writing this type of code?”
 - **Notification 활용**
-    - Yes : 현재 질문이 적절하다는 응답으로, 이 질문을 기반으로 관련 함수나 알고리즘을 추천해 드립니다.
+    - Yes : 현재 질문이 적절하다는 응답으로, 이 질문을 기반으로 기본 검색어와 추천 코드를 제공합니다.
         - “Great! Let me assist you.”
         - “I will recommend functions and algorithms.”
     - 미응답 : 추후에 다시 분석을 진행하고 응답을 받도록 안내합니다.
@@ -231,24 +228,13 @@ Button / Interaction (View) / Information message Notification, Quick Pick, Outp
     - “"I enter selected option as query.”
 - 구글 검색을 실행 후 검색 결과를 기본 브라우저의 새 창으로 열어줍니다.
 
-### (구현 필요)
-
-### 6. 코드 추천 기능
-
-- Button : Request recommendation
-- Command : CodeLingo.recommend
-- Title : Let me recommend
-- 동작 : 사용자에게 추천 코드를 보여줍니다. + "Recommend usual code”
-- (“Now I will serve you recommend CODE!”라고 임시로..**→추천 코드는 어떻게 보여줄 것인가?**)
-
-### 7. Assist! 기능
+### 7. Assist! 기능(코드 추천 기능)
 
 - Button : Assist! Code Lingo
 - Command : CodeLingo.assist
 - Title : Assist! Code Lingo
-- 동작 : 우선 사용자에게 버튼으로 동작할 수 있는 기능들을 알려줍니다.
-- "Assist! Code Lingo”, "What do you want to do?”, "You can choose actions by buttons!”
-- (이후 코드 자동 완성 기능을 구현 시 연결 예정)
+- 동작 : "Assist! Code Lingo”, "Recommend usual code”
+- 사용자에게 선택된 질문 기반으로 생성된 추천 코드를 보여줍니다.(Output Channel 활용!)
 
 ### (2번, 3번 내용에 대한 추가 코멘트)
 
